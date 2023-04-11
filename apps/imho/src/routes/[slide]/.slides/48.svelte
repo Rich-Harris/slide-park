@@ -1,0 +1,3 @@
+<script context="module">export const metadata = {"text":"<p>Over the last few months, RPC has a bit of a renaissance in the front end world, except that now we call it &#39;server functions&#39;. I first saw it in Solid Start. The idea is that you write code like this, and a compiler waves a magic wand and now you can call code on your server as though it were a local function. The ergonomics of this are undeniably very nice. And as far as TypeScript is concerned, it <em>is</em> a local function, so we get type safety — we know that this argument here could be <code>name</code> or <code>qty</code>, for example.</p>\n","title":"Server functions","classnames":"","styles":[]};</script>
+
+<h1>Server functions</h1>

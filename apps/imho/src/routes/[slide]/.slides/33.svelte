@@ -1,0 +1,3 @@
+<script context="module">export const metadata = {"text":"<p>So why am I talking about other frameworks&#39; design decisions? I&#39;m not telling you &#39;don&#39;t use Remix&#39;, and I&#39;m not saying the Remix team should make different choices — that&#39;s not my business. But oftentimes people will say &#39;other frameworks do X, should SvelteKit do the same thing?&#39; and then it becomes my business.</p>\n<p>The reason for that design choice is that it&#39;s convenient to colocate related pieces of code.</p>\n","title":"SvelteKit","classnames":"","styles":[]};</script>
+
+<img alt="Svelte logo" src="./images/svelte-logo.svg" style="width: 40em" />

@@ -1,0 +1,128 @@
+@import '@fontsource/overpass';
+@import '@fontsource/roboto-mono';
+@import '@fontsource/sue-ellen-francisco';
+@import 'prismjs/themes/prism-tomorrow.css';
+
+* {
+	--cx: 0;
+	--cy: 0;
+	position: relative;
+	box-sizing: border-box;
+}
+
+.anchored {
+	transform: translate(calc(-100% * var(--cx)), calc(-100% * var(--cy))) scale(var(--scale, 1));
+}
+
+body {
+	--font: 'Overpass', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+		Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+	--font-mono: 'Fira Mono', monospace;
+    --red: rgb(200, 63, 55);
+    --green: rgb(45, 164, 55);
+	background: #111;
+	color: #ddd;
+	font-family: var(--font);
+	font-size: 1vw;
+	tab-size: 6;
+}
+
+.slide h1 {
+	/* text-transform: uppercase; */
+	font-size: 5em;
+	line-height: 1;
+	margin: 0;
+	font-weight: 200;
+    max-width: 12em;
+    text-align: center;
+}
+
+.part-title {
+	text-transform: uppercase;
+}
+
+.slide small {
+	display: block;
+	font-size: 0.4em;
+	margin: 0 0 0.5em 0;
+	letter-spacing: 0.1em;
+}
+
+.slide p {
+	margin: 0;
+    font-size: 2em;
+}
+
+.slide ul {
+	padding-left: 2rem;
+}
+
+.slide a {
+	color: inherit;
+	text-decoration: none;
+}
+
+/* slide utility styles */
+.slide .absolute {
+	position: absolute;
+}
+
+.slide .max {
+	width: 100%;
+	height: 100%;
+	left: 0;
+	top: 0;
+}
+
+.notes {
+	position: absolute;
+	width: 33%;
+	height: 60%;
+	left: 0;
+	top: 25%;
+	color: #ff3e00;
+	font-family: 'Sue Ellen Francisco';
+	font-size: 3em;
+	line-height: 1;
+	padding: 0 2rem 0 6rem;
+	margin: 0;
+	list-style: none;
+}
+
+.notes li {
+	margin: 0 0 0.5em 0;
+}
+
+.notes li:not(:first-child:last-child)::before {
+	content: '•';
+	position: absolute;
+	left: -0.5em;
+}
+
+.slide li {
+	font-size: 3em;
+	list-style: none;
+}
+
+.slide {
+    display: flex;
+    aspect-ratio: 16 / 9;
+    flex-direction: column;
+    overflow: hidden;
+    gap: 2em;
+    align-items: center;
+    justify-content: center;
+}
+
+.slide .spice-level {
+    font-size: 4em;
+    display: flex;
+}
+
+.slide .faded {
+    filter: grayscale(1) opacity(0.8);
+}
+
+pre code {
+	font-size: 3em;
+}
