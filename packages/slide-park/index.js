@@ -1,7 +1,6 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as url from 'node:url';
-import chokidar from 'chokidar';
 import { marked } from 'marked';
 
 const page_svelte = fs.readFileSync(
@@ -48,15 +47,16 @@ const index = (slides) => `export const slides = [
 
 /**
  * @param {string} file
+ * @param {boolean} is_build
  * @returns {{ slides: Slide[] }}
  */
-function load(file) {
+function load(file, is_build) {
 	const markdown = fs.readFileSync(file, 'utf-8');
 
 	const slides = markdown.split(/^#+ /m).slice(1);
 
 	return {
-		slides: slides.map((content) => {
+		slides: slides.map((content, i) => {
 			content = content.trim();
 
 			const pattern =
@@ -108,7 +108,12 @@ function load(file) {
 			}
 
 			if (!component) {
-				component = `<h1>${title}</h1>`;
+				const message = `Missing component for slide ${i + 1} ("${title}")`;
+
+				if (is_build) throw new Error(message);
+
+				console.error(`\u001B[1m\u001B[31m${message}\u001B[39m\u001B[22m`);
+				component = `<h1 style="color: hotpink">${title}</h1>`;
 			}
 
 			const metadata = JSON.stringify({
@@ -138,6 +143,7 @@ export function slides({ input, output = 'src/routes' }) {
 		throw new Error('input not specified');
 	}
 
+	input = path.resolve(input);
 	const dest = path.resolve(output, '[slide]/.slides');
 
 	fs.rmSync(dest, { recursive: true, force: true });
@@ -172,8 +178,9 @@ export function slides({ input, output = 'src/routes' }) {
 		cache.set(file, contents);
 	}
 
-	async function render() {
-		const { slides } = load(`${input}/content.md`);
+	/** @param {boolean} is_build */
+	async function render(is_build) {
+		const { slides } = load(`${input}/content.md`, is_build);
 
 		for (let i = 0; i < slides.length; i += 1) {
 			const slide = slides[i];
@@ -188,17 +195,21 @@ export function slides({ input, output = 'src/routes' }) {
 	const base = path.resolve(input) + path.sep;
 	const doc = base + 'content.md';
 
-	render();
+	let is_build = false;
 
 	return {
 		name: 'slides',
 
-		config(config, { command }) {
-			if (command !== 'serve') return;
+		configResolved(config) {
+			is_build = config.command === 'build';
+		},
 
-			const watcher = chokidar.watch(`${input}/**`, { ignoreInitial: true });
+		buildStart() {
+			render(is_build);
+		},
 
-			watcher.on('add', (file) => {
+		configureServer(vite) {
+			vite.watcher.on('add', (file) => {
 				const relative = path.relative(input, file);
 				const resolved = path.join(dest, relative);
 
@@ -209,14 +220,16 @@ export function slides({ input, output = 'src/routes' }) {
 				fs.copyFileSync(file, path.join(dest, relative));
 			});
 
-			watcher.on('unlink', (file) => {
+			vite.watcher.on('unlink', (file) => {
 				const relative = path.relative(input, file);
 				fs.unlinkSync(path.join(dest, relative));
 			});
 
-			watcher.on('change', (file) => {
-				if (path.resolve(file) === doc) {
-					render();
+			vite.watcher.on('change', (file) => {
+				if (!file.startsWith(input + path.sep)) return;
+
+				if (file === doc) {
+					render(false);
 				} else {
 					const relative = path.relative(input, file);
 					fs.copyFileSync(file, path.join(dest, relative));
