@@ -8,7 +8,7 @@
 	export let data;
 
 	/** @type {'presenter' | 'viewer'}*/
-	let mode = 'viewer';
+	let mode = 'presenter';
 
 	let primary = true;
 
