@@ -210,6 +210,8 @@ export function slides({ input, output = 'src/routes' }) {
 
 		configureServer(vite) {
 			vite.watcher.on('add', (file) => {
+				if (!file.startsWith(input + path.sep)) return;
+
 				const relative = path.relative(input, file);
 				const resolved = path.join(dest, relative);
 
@@ -221,6 +223,8 @@ export function slides({ input, output = 'src/routes' }) {
 			});
 
 			vite.watcher.on('unlink', (file) => {
+				if (!file.startsWith(input + path.sep)) return;
+
 				const relative = path.relative(input, file);
 				fs.unlinkSync(path.join(dest, relative));
 			});
