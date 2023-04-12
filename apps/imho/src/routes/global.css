@@ -18,12 +18,12 @@ body {
 	--font: 'Overpass', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
 		Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
 	--font-mono: 'Fira Mono', monospace;
-    --red: rgb(200, 63, 55);
-    --green: rgb(45, 164, 55);
+	--red: rgb(200, 63, 55);
+	--green: rgb(45, 164, 55);
 	background: #111;
 	color: #ddd;
 	font-family: var(--font);
-	font-size: 1vw;
+	/* font-size: 1vw; */
 	tab-size: 6;
 }
 
