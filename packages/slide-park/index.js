@@ -3,12 +3,8 @@ import * as path from 'node:path';
 import * as url from 'node:url';
 import { marked } from 'marked';
 
-const page_svelte = fs.readFileSync(
-	url.fileURLToPath(new URL('assets/+page.svelte', import.meta.url))
-);
-const page_ts = fs.readFileSync(
-	url.fileURLToPath(new URL('assets/+page.ts', import.meta.url))
-);
+const asset_dir = url.fileURLToPath(new URL('assets', import.meta.url));
+const assets = fs.readdirSync(asset_dir);
 
 /**
  * @typedef
@@ -188,8 +184,13 @@ export function slides({ input, output = 'src/routes' }) {
 		}
 
 		write(`${dest}/index.js`, index(slides));
-		write(`${output}/[slide]/+page.svelte`, page_svelte);
-		write(`${output}/[slide]/+page.ts`, page_ts);
+
+		for (const asset of assets) {
+			write(
+				`${output}/[slide]/${asset}`,
+				fs.readFileSync(`${asset_dir}/${asset}`)
+			);
+		}
 	}
 
 	const base = path.resolve(input) + path.sep;

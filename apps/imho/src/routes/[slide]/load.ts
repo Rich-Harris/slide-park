@@ -1,11 +1,12 @@
 // @ts-ignore
 import { slides } from './.slides/index.js';
+import Slide from './Slide.svelte';
 
 const WORDS_PER_MINUTE = 180;
 const WORDS_PER_SECOND = WORDS_PER_MINUTE / 60;
 
-export async function load({ params }) {
-	const match = /^(\d+)-(\d+)$/.exec(params.slide);
+export async function getSlide(slug: string) {
+	const match = /^(\d+)-(\d+)$/.exec(slug);
 	if (!match) return { status: 404 };
 
 	const index = +match[1] - 1;
@@ -34,6 +35,7 @@ export async function load({ params }) {
 	const remaining_seconds = Math.round(remaining_words / WORDS_PER_SECOND);
 
 	return {
+		component: Slide,
 		index,
 		total: slides.length,
 		remaining_seconds,
@@ -46,7 +48,7 @@ export async function load({ params }) {
 		title: module.metadata.title,
 		styles: module.metadata.styles,
 		classnames: module.metadata.classnames,
-		component: module.default,
+		current: module.default,
 		step: +match[2]
 	};
 }

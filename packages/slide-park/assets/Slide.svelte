@@ -96,7 +96,7 @@
 	</div>
 	<div class="main">
 		<div class="slide {data.classnames}" style={data.styles}>
-			<data.component step={data.step} slide={{ title: data.title }} />
+			<data.current step={data.step} slide={{ title: data.title }} />
 		</div>
 	</div>
 </div>
