@@ -6,8 +6,8 @@ import { marked } from 'marked';
 const page_svelte = fs.readFileSync(
 	url.fileURLToPath(new URL('assets/+page.svelte', import.meta.url))
 );
-const page_js = fs.readFileSync(
-	url.fileURLToPath(new URL('assets/+page.js', import.meta.url))
+const page_ts = fs.readFileSync(
+	url.fileURLToPath(new URL('assets/+page.ts', import.meta.url))
 );
 
 /**
@@ -189,7 +189,7 @@ export function slides({ input, output = 'src/routes' }) {
 
 		write(`${dest}/index.js`, index(slides));
 		write(`${output}/[slide]/+page.svelte`, page_svelte);
-		write(`${output}/[slide]/+page.js`, page_js);
+		write(`${output}/[slide]/+page.ts`, page_ts);
 	}
 
 	const base = path.resolve(input) + path.sep;
