@@ -14,7 +14,7 @@
     "dependencies": {
         "chokidar": "^3.5.3",
         "marked": "^4.3.0",
-        "svelte": "^3.54.0"
+        "svelte": "^5.1.12"
     },
     "devDependencies": {
         "@types/node": "^18.15.9",

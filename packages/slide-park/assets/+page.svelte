@@ -1,16 +1,18 @@
-<script>
+<script lang="ts">
 	// @ts-ignore
 	import { page } from '$app/stores';
 	// @ts-ignore
 	import { goto, beforeNavigate, afterNavigate } from '$app/navigation';
 
-	/** @type {Awaited<ReturnType<typeof import('./+page.js').load>>} */
-	export let data;
+	interface Props {
+		data: Awaited<ReturnType<typeof import('./+page').load>>;
+	}
 
-	/** @type {'presenter' | 'viewer'}*/
-	let mode = 'presenter';
+	let { data }: Props = $props();
 
-	let primary = true;
+	let mode: 'presenter' | 'viewer' = $state('presenter');
+
+	let primary = $state(true);
 
 	const active = 'slide-park:active';
 	const current = 'slide-park:current';
@@ -45,7 +47,7 @@
 </script>
 
 <svelte:window
-	on:keydown={(e) => {
+	onkeydown={(e) => {
 		if (document.activeElement !== document.body) return;
 		if (e.key.startsWith('Arrow') || e.key === 'Space' || e.key === 'P') {
 			e.preventDefault();
@@ -65,7 +67,7 @@
 			}
 		}
 	}}
-	on:storage={(e) => {
+	onstorage={(e) => {
 		if (e.key !== current) return;
 
 		if (e.newValue !== $page.url.pathname) {
@@ -84,7 +86,7 @@
 		<div class="content">{@html data.text}</div>
 		<p class="progress">
 			<span style="width: 4em;">{data.index + 1}/{data.total}</span>
-			<progress value={(data.index + 1) / data.total} max="1" />
+			<progress value={(data.index + 1) / data.total} max="1"></progress>
 			<span style="width: 9em; text-align: right;">
 				{Math.floor(data.remaining_seconds / 60)}m{pad(
 					data.remaining_seconds % 60
@@ -94,11 +96,7 @@
 	</div>
 	<div class="main">
 		<div class="slide {data.classnames}" style={data.styles}>
-			<svelte:component
-				this={data.component}
-				step={data.step}
-				slide={{ title: data.title }}
-			/>
+			<data.component step={data.step} slide={{ title: data.title }} />
 		</div>
 	</div>
 </div>
@@ -150,8 +148,17 @@
 	.text {
 		display: flex;
 		flex-direction: column;
-		font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-			Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue',
+		font-family:
+			system-ui,
+			-apple-system,
+			BlinkMacSystemFont,
+			'Segoe UI',
+			Roboto,
+			Oxygen,
+			Ubuntu,
+			Cantarell,
+			'Open Sans',
+			'Helvetica Neue',
 			sans-serif;
 		font-size: 80px;
 		background: #000;
