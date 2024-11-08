@@ -189,7 +189,7 @@
 	}
 
 	.text progress::-webkit-progress-bar {
-		background: red;
+		background: #333;
 	}
 
 	@media (min-aspect-ratio: 16 / 9) {

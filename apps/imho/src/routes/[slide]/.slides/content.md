@@ -822,27 +822,30 @@ Some people are really put off by this, and that's totally fine. But for people 
 
 	export let step;
 
+	const SCRIPT = 'script';
+	const STYLE = 'style';
+
 	const svelte = (code) => Prism.highlight(code, Prism.languages.svelte, 'svelte');
 </script>
 
 <pre><code
-		>{@html svelte(`<script>
+		>{@html svelte(`<${SCRIPT}>
 	let count = 0;
 
 	function increment() {
 		count += 1;
 	}
-</script>
+</${SCRIPT}>
 
 <button on:click={() => count += 1}>
 	clicks: {count}
 </button>
 
-<style>
+<${STYLE}>
 	button {
 		font-size: 100px;
 	}
-</st` + `yle>`)}</code
+</${STYLE}>`)}</code
 	></pre>
 
 <style>
@@ -865,7 +868,7 @@ Some people are really put off by this, and that's totally fine. But for people 
 So I'm pro-DSL but there is a crucial caveat — be honest about it. In the Svelte case we're using .svelte files — when you open a .svelte file you're entering a kind of liminal space where the normal rules of programming are briefly suspended. And again, some people want nothing to do with that, and that's fine, but I think most of us like having a little magic in our lives from time to time.
 
 ```svelte
-<h1>implicit DSLs are... less good</h1>
+<h1>implicit DSLs are...<br />less good</h1>
 <p class="spice-level">
 	<span>🌶️</span>
 	<span>🌶️</span>
@@ -897,6 +900,12 @@ Around the same time, the D3 community had browbeaten Mike Bostock into using a 
 That was on May 27 2015. On May 29 he started filing issues on the Rollup repo, like this one. Mike is the nicest, most wonderful man, and he is much too kind to put it like this, but what he's saying in this issue is 'JavaScript doesn't work like that, you numpty'.
 
 And he's right. It doesn't. You can't just remove modules from the graph without fundamentally altering the semantics of the code.
+
+```svelte
+<a rel="noreferrer" target="_blank" href="https://github.com/rollup/rollup/issues/13">
+	<img alt="Screenshot of GitHub issue" src="./images/mike.png" style="width: 90em" />
+</a>
+```
 
 ## Remix/Next co-located loaders
 
@@ -1114,7 +1123,7 @@ This doesn't feel like it should be a spicy take, but it does have some moderate
 Now other things are not always equal — sometimes you need to access your database, in which case your code should run close to your database, and sometimes you need access to sensitive information that can't be exposed to the client. But there's a lot of stuff that doesn't fall into that category. For example if I add a product to my shopping cart, I should be able to see that reflected immediately.
 
 ```svelte
-<h1>code should run close to the user</h1>
+<h1>code should run<br />close to the user</h1>
 <p class="spice-level">
 	<span>🌶️</span>
 	<span>🌶️</span>
@@ -1158,7 +1167,7 @@ Now clearly this has some very substantial benefits — this is hugely important
 RPC stands for Remote Procedure Call, and it's an idea that's been around since the 70s. Basically what it means is that instead of passing a message to a server and waiting for a response, you call a function on the server instead, and the RPC protocol takes care of the actual message passing. In effect, it allows you to pretend that a distributed system is not distributed — you're just calling functions.
 
 ```svelte
-<h1>we will regret reinventing RPC</h1>
+<h1>we will regret<br />reinventing RPC</h1>
 <p class="spice-level">
 	<span>🌶️</span>
 	<span>🌶️</span>

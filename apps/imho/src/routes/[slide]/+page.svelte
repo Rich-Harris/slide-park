@@ -8,7 +8,7 @@
 	export let data;
 
 	/** @type {'presenter' | 'viewer'}*/
-	let mode = 'viewer';
+	let mode = 'presenter';
 
 	let primary = true;
 
@@ -92,12 +92,14 @@
 			</span>
 		</p>
 	</div>
-	<div class="slide {data.classnames}" style={data.styles}>
-		<svelte:component
-			this={data.component}
-			step={data.step}
-			slide={{ title: data.title }}
-		/>
+	<div class="main">
+		<div class="slide {data.classnames}" style={data.styles}>
+			<svelte:component
+				this={data.component}
+				step={data.step}
+				slide={{ title: data.title }}
+			/>
+		</div>
 	</div>
 </div>
 
@@ -120,14 +122,29 @@
 		transform: scale(0.25);
 	}
 
-	.text,
+	.text {
+		aspect-ratio: 2;
+	}
+
 	.slide {
 		aspect-ratio: 16 / 9;
 		background-size: cover;
 	}
 
+	.main {
+		display: grid;
+		place-items: center;
+		width: 100vw;
+	}
+
+	.main,
 	.slide {
 		overflow: hidden;
+	}
+
+	.slide {
+		width: 100em;
+		height: 56.25em;
 	}
 
 	.text {
@@ -172,26 +189,18 @@
 	}
 
 	.text progress::-webkit-progress-bar {
-		background: red;
+		background: #333;
 	}
 
 	@media (min-aspect-ratio: 16 / 9) {
 		:global(html) {
 			font-size: calc(16 / 9 * 1vh);
 		}
-
-		.slide {
-			height: 100%;
-		}
 	}
 
 	@media (max-aspect-ratio: 16 / 9) {
 		:global(html) {
 			font-size: 1vw;
-		}
-
-		.slide {
-			width: 100%;
 		}
 	}
 </style>
