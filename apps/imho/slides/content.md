@@ -51,9 +51,8 @@ Finally, while I think the Svelte team would mostly agree with the things I'll s
 	h1 {
 		font-size: 12em;
 		font-family: 'Sue Ellen Francisco';
-		filter: drop-shadow(0 0 0.2em black) drop-shadow(0 0 0.2em black) drop-shadow(0 0 0.2em black) drop-shadow(
-				0 0 0.2em black
-			);
+		filter: drop-shadow(0 0 0.2em black) drop-shadow(0 0 0.2em black) drop-shadow(0 0 0.2em black)
+			drop-shadow(0 0 0.2em black);
 	}
 
 	span {
@@ -99,7 +98,7 @@ The only problem is that it's absolute horseshit. When you last went on a recipe
 Of course not.
 
 ```svelte
-<img alt="Society if..." src="./images/society-if.jpg" />
+<enhanced:img alt="Society if..." src="./images/society-if.jpg" />
 
 <style>
 	img {
@@ -143,7 +142,7 @@ But we have to be careful how we interpret this. For example, Astro explicitly m
 All of which is to say that as much as we love to talk about technology choices, for the most part you shouldn't feel pressured, by me or anybody else, to switch away from whatever makes you productive at shipping software.
 
 ```svelte
-<img alt="Core Web Vitals report screenshot" src="./images/cwv.png" />
+<enhanced:img alt="Core Web Vitals report screenshot" src="./images/cwv.png" />
 
 <style>
 	img {
@@ -251,11 +250,15 @@ A single number simply can't capture that nuance, and you should be wary of peop
 ```svelte
 <div class="grid">
 	<div class="performance">
-		<img alt="A Lighthouse score of 61" src="./images/61.png" style="width: 10em" />
+		<enhanced:img alt="A Lighthouse score of 61" src="./images/61.png" style="width: 10em" />
 	</div>
 
 	<a rel="noreferrer" target="_blank" href="https://learn.svelte.dev">
-		<img alt="Screenshot of learn.svelte.dev" src="./images/learn.png" style="width: 70em" />
+		<enhanced:img
+			alt="Screenshot of learn.svelte.dev"
+			src="./images/learn.png"
+			style="width: 70em"
+		/>
 	</a>
 </div>
 
@@ -300,7 +303,7 @@ A website I reference constantly is https://www.kryogenix.org/code/browser/every
 	target="_blank"
 	href="https://www.kryogenix.org/code/browser/everyonehasjs.html"
 >
-	<img
+	<enhanced:img
 		alt="Screenshot of Everyone Has JS, Right?"
 		src="./images/kryogenix.png"
 		style="width: 90em"
@@ -314,7 +317,11 @@ Take https://calendar.google.com/calendar/ for example. Obviously JavaScript is 
 
 ```svelte
 <a rel="noreferrer" target="_blank" href="https://calendar.google.com/calendar">
-	<img alt="Screenshot of Google Calendar" src="./images/calendar.png" style="width: 90em" />
+	<enhanced:img
+		alt="Screenshot of Google Calendar"
+		src="./images/calendar.png"
+		style="width: 90em"
+	/>
 </a>
 ```
 
@@ -323,7 +330,7 @@ Take https://calendar.google.com/calendar/ for example. Obviously JavaScript is 
 Ideally, you should get an app that works without JavaScript 'for free', and that's something that we on the SvelteKit team strive for. For example we server render everything by default, and we spend a lot of time thinking about how to make it as easy or easier to use forms, which work without JavaScript, than to use `fetch`.
 
 ```svelte
-<img alt="Svelte logo" src="./images/svelte-logo.svg" style="width: 40em" />
+<enhanced:img alt="Svelte logo" src="./images/svelte-logo.svg" style="width: 40em" />
 ```
 
 ## Kim Kardashian
@@ -344,7 +351,10 @@ Maybe you don't care about what Kim Kardashian was wearing in 2017. But so much 
 		href="https://web.archive.org/web/20140706044202/https://www.instagram.com/kimkardashian/"
 	>
 		<div>
-			<img alt="Kim Kardashian's Instagram account in 2014" src="./images/kardashian/2014.png" />
+			<enhanced:img
+				alt="Kim Kardashian's Instagram account in 2014"
+				src="./images/kardashian/2014.png"
+			/>
 		</div>
 		<span>2014</span>
 	</a>
@@ -355,7 +365,10 @@ Maybe you don't care about what Kim Kardashian was wearing in 2017. But so much 
 		href="https://web.archive.org/web/20150704180035/https://instagram.com/kimkardashian/"
 	>
 		<div>
-			<img alt="Kim Kardashian's Instagram account in 2015" src="./images/kardashian/2015.png" />
+			<enhanced:img
+				alt="Kim Kardashian's Instagram account in 2015"
+				src="./images/kardashian/2015.png"
+			/>
 		</div>
 		<span>2015</span>
 	</a>
@@ -366,7 +379,10 @@ Maybe you don't care about what Kim Kardashian was wearing in 2017. But so much 
 		href="https://web.archive.org/web/20160710225649/https://www.instagram.com/kimkardashian/"
 	>
 		<div>
-			<img alt="Kim Kardashian's Instagram account in 2016" src="./images/kardashian/2016.png" />
+			<enhanced:img
+				alt="Kim Kardashian's Instagram account in 2016"
+				src="./images/kardashian/2016.png"
+			/>
 		</div>
 		<span>2016</span>
 	</a>
@@ -377,7 +393,10 @@ Maybe you don't care about what Kim Kardashian was wearing in 2017. But so much 
 		href="https://web.archive.org/web/20180607144953/https://www.instagram.com/kimkardashian/"
 	>
 		<div>
-			<img alt="Kim Kardashian's Instagram account in 2018" src="./images/kardashian/2018.png" />
+			<enhanced:img
+				alt="Kim Kardashian's Instagram account in 2018"
+				src="./images/kardashian/2018.png"
+			/>
 		</div>
 		<span>2018</span>
 	</a>
@@ -388,7 +407,10 @@ Maybe you don't care about what Kim Kardashian was wearing in 2017. But so much 
 		href="https://web.archive.org/web/20190707000543/https://www.instagram.com/kimkardashian/"
 	>
 		<div>
-			<img alt="Kim Kardashian's Instagram account in 2019" src="./images/kardashian/2019.png" />
+			<enhanced:img
+				alt="Kim Kardashian's Instagram account in 2019"
+				src="./images/kardashian/2019.png"
+			/>
 		</div>
 		<span>2019</span>
 	</a>
@@ -399,7 +421,10 @@ Maybe you don't care about what Kim Kardashian was wearing in 2017. But so much 
 		href="https://web.archive.org/web/20221013050249/https://www.instagram.com/kimkardashian/"
 	>
 		<div>
-			<img alt="Kim Kardashian's Instagram account in 2022" src="./images/kardashian/2022.png" />
+			<enhanced:img
+				alt="Kim Kardashian's Instagram account in 2022"
+				src="./images/kardashian/2022.png"
+			/>
 		</div>
 		<span>2022</span>
 	</a>
@@ -453,7 +478,7 @@ This is the SvelteKit website running on IPFS, and you'll notice that the client
 ```svelte
 <div class="grid">
 	<div class="left">
-		<img alt="IPFS logo" src="./images/ipfs.svg" style="width: 10em" />
+		<enhanced:img alt="IPFS logo" src="./images/ipfs.svg" style="width: 10em" />
 	</div>
 
 	<a
@@ -461,7 +486,7 @@ This is the SvelteKit website running on IPFS, and you'll notice that the client
 		target="_blank"
 		href="https://ipfs.io/ipfs/QmXUZqcRoSMSkudF5eWbdL7TvjMHaHcmVdQb8yr9id2gq5"
 	>
-		<img
+		<enhanced:img
 			alt="Screenshot of kit.svelte.dev running on IPFS"
 			src="./images/ipfs.png"
 			style="width: 60em"
@@ -649,7 +674,7 @@ I've tried to argue in the past that the distinction is rather unhelpful since m
 
 ```svelte
 <a rel="noreferrer" target="_blank" href="https://www.youtube.com/watch?v=860d8usGC0o">
-	<img
+	<enhanced:img
 		alt="'Transitional Apps' on YouTube"
 		src="./images/transitional-apps.png"
 		style="width: 75em"
@@ -667,7 +692,7 @@ Now they'll be quick to point out that this is opt-in, not the default, but here
 
 ```svelte
 <a rel="noreferrer" target="_blank" href="https://github.com/withastro/roadmap/issues/532">
-	<img
+	<enhanced:img
 		alt="Astro client-side routing proposal"
 		src="./images/astro-killed-mpas.png"
 		style="width: 75em"
@@ -774,7 +799,7 @@ Domain-specific languages get a bad rap, but I like them. DSLs are in contrast t
 But you can do some pretty cool things with DSLs. This is Lucy by Matthew Philips and it's one of my favourite examples from recent memory — it's a DSL for describing state machines, and you can clearly see how much more expressive the DSL version is than the general-purpose one. This is cool, and I want to see more stuff like this.
 
 ```svelte
-<img alt="https://lucylang.org screenshot" src="./images/lucy.png" style="width: 75em" />
+<enhanced:img alt="https://lucylang.org screenshot" src="./images/lucy.png" style="width: 75em" />
 ```
 
 ## JS is a bad language for UI
@@ -887,7 +912,11 @@ But here's where it starts to get a bit too weird for me — if you start changi
 	target="_blank"
 	href="https://twitter.com/Rich_Harris/status/1626014033705852933"
 >
-	<img alt="An ill-advised tweet" src="./images/tweets/semantics.png" style="width: 60em" />
+	<enhanced:img
+		alt="An ill-advised tweet"
+		src="./images/tweets/semantics.png"
+		style="width: 60em"
+	/>
 </a>
 ```
 
@@ -903,7 +932,7 @@ And he's right. It doesn't. You can't just remove modules from the graph without
 
 ```svelte
 <a rel="noreferrer" target="_blank" href="https://github.com/rollup/rollup/issues/13">
-	<img alt="Screenshot of GitHub issue" src="./images/mike.png" style="width: 90em" />
+	<enhanced:img alt="Screenshot of GitHub issue" src="./images/mike.png" style="width: 90em" />
 </a>
 ```
 
@@ -966,7 +995,7 @@ But it does have real world impacts — there's actually a whole page in the Rem
 
 ```svelte
 <a rel="noreferrer" target="_blank" href="https://remix.run/docs/en/main/guides/constraints">
-	<img alt="Remix documentation" src="./images/remix.png" style="width: 90em" />
+	<enhanced:img alt="Remix documentation" src="./images/remix.png" style="width: 90em" />
 </a>
 ```
 
@@ -976,7 +1005,7 @@ More alarming to me is the possibility that you could end up with server code in
 
 ```svelte
 <a rel="noreferrer" target="_blank" href="https://twitter.com/mjackson/status/1630627605631344640">
-	<img
+	<enhanced:img
 		alt="Michael Jackson tweeting about Remix"
 		src="./images/tweets/mj.png"
 		style="width: 50em"
@@ -989,7 +1018,7 @@ More alarming to me is the possibility that you could end up with server code in
 Even if you don't make that mistake, you're still prohibited from using sourcemaps to debug your app in production, because the sourcemaps will contain the entire module, including your database queries or whatever.
 
 ```svelte
-<img alt="Remix sourcemaps" src="./images/sourcemaps.png" style="width: 90em" />
+<enhanced:img alt="Remix sourcemaps" src="./images/sourcemaps.png" style="width: 90em" />
 ```
 
 ## SvelteKit
@@ -999,7 +1028,7 @@ So why am I talking about other frameworks' design decisions? I'm not telling yo
 The reason for that design choice is that it's convenient to colocate related pieces of code.
 
 ```svelte
-<img alt="Svelte logo" src="./images/svelte-logo.svg" style="width: 40em" />
+<enhanced:img alt="Svelte logo" src="./images/svelte-logo.svg" style="width: 40em" />
 ```
 
 ## Ractive
@@ -1008,7 +1037,7 @@ Now you don't need to sell me on the benefits of colocation. I was doing single-
 
 ```svelte
 <a rel="noreferrer" target="_blank" href="https://github.com/ractivejs/ractive/issues/366">
-	<img
+	<enhanced:img
 		alt="The Ractive issue where single-file components were invented"
 		src="./images/ractive.png"
 		style="width: 75em"
@@ -1025,7 +1054,11 @@ The page's server code goes in a `+page.server.js` file, and any file with that 
 Directory-based routing is something we stole from Next.js, and it has a list of other benefits that's too long to get into right now, but I strongly believe that this is the way. One little Easter egg I'll show you is that on the right, in `+page.svelte`, on line 16 we're hovering over `data.guesses` and it's giving us the type and the inline documentation that we wrote on the left on line 9. So we get type safety across the network. This is the sort of thing that's made possible by embracing strong conventions.
 
 ```svelte
-<img alt="VSCode showing a SvelteKit project" src="./images/vscode.png" style="width: 90em" />
+<enhanced:img
+	alt="VSCode showing a SvelteKit project"
+	src="./images/vscode.png"
+	style="width: 90em"
+/>
 ```
 
 ## Screens are wide but files are tall
@@ -1057,7 +1090,7 @@ Okay, another example of non-standard semantics, this time from the Qwik team. Q
 If you move the `increment` function out of the block of JSX, the app breaks. If it was JavaScript that would be fine, but it's not JavaScript, it's Qwik — it's effectively a DSL for more granular code-splitting. By the same token you have to be careful about what values you reference inside that function, because in order to recreate the lexical scope the framework has to serialize it.
 
 ```svelte
-<img alt="Screenshot of Qwik code" src="./images/qwik.jpg" style="width: 90em" />
+<enhanced:img alt="Screenshot of Qwik code" src="./images/qwik.jpg" style="width: 90em" />
 ```
 
 ## Manu
@@ -1070,7 +1103,7 @@ I mentioned this on Twitter a while back and within a few hours Manu from the Qw
 	target="_blank"
 	href="https://twitter.com/manucorporat/status/1626588991993831426"
 >
-	<img
+	<enhanced:img
 		alt="Manu tweeting about improved Qwik error messages"
 		src="./images/tweets/manu.png"
 		style="width: 60em"
@@ -1084,7 +1117,11 @@ For an experiment I asked ChatGPT to refactor the component, and at first it tri
 
 ```svelte
 <a rel="noreferrer" target="_blank" href="https://sharegpt.com/c/6dD13WF">
-	<img alt="A conversation with ChatGPT" src="./images/chatgpt-qwik.png" style="width: 80em" />
+	<enhanced:img
+		alt="A conversation with ChatGPT"
+		src="./images/chatgpt-qwik.png"
+		style="width: 80em"
+	/>
 </a>
 ```
 
@@ -1098,7 +1135,7 @@ Another example, from Solid — it looks very much like these two components sho
 	target="_blank"
 	href="https://twitter.com/devongovett/status/1629545561635389440"
 >
-	<img
+	<enhanced:img
 		alt="Devon Govett tweeting about signals"
 		src="./images/tweets/devon.png"
 		style="width: 60em"
@@ -1113,7 +1150,7 @@ I don't mean to pick on these frameworks, because they're all doing really inter
 Nor am I telling you what to think — I encourage you to play around with all of these frameworks and develop your own opinions. I'm just telling you what _I_ think, and what I think is that your scientists were so preoccupied with whether they could, they didn't stop to think if they should.
 
 ```svelte
-<img alt="Jeff Goldblum" src="./images/goldblum.avif" style="width: 80em" />
+<enhanced:img alt="Jeff Goldblum" src="./images/goldblum.avif" style="width: 80em" />
 ```
 
 # Code should run close to the user
@@ -1137,7 +1174,11 @@ Now other things are not always equal — sometimes you need to access your data
 Another example that we're all familiar with — when you're writing a comment in GitHub, you can't preview it without sending the comment to the server so that it can render the markdown. Sometimes it's pretty slow! But you can _absolutely_ do markdown rendering and syntax highlighting in the browser — maybe you'd want to lazy load the grammars you're using, but it's a very solvable problem and it would provide a much nicer user experience.
 
 ```svelte
-<video src="./github.mp4" style="width: 80em" autoplay muted loop />
+<script>
+	import github from './github.mp4?url';
+</script>
+
+<video src={github} style="width: 80em" autoplay muted loop />
 ```
 
 ## Offline-first
@@ -1181,13 +1222,13 @@ RPC stands for Remote Procedure Call, and it's an idea that's been around since 
 Back in the 80s people were calling the wisdom of this idea into question. This 1988 paper by Andrew Tanenbaum called 'A Critique of the Remote Procedure Call Paradigm' is very much of its time, but it's still worth reading. Some arguments can't be serialized correctly — serializing closures is particularly hairy. If the server mutates arguments, that mutation won't be respected on the client. Network errors and logic errors kind of get smushed together. All these things are easy to deal with if you're not hiding the implementation details.
 
 ```svelte
-<img
+<enhanced:img
 	alt="Abstract of 'A Critique of the Remote Procedure Call Paradigm'"
 	src="./images/rpc-1.png"
 	style="width: 50rem; transform: translate(-14em, -2em) rotate(-2deg)"
 />
 
-<img
+<enhanced:img
 	alt="Abstract of 'A Critique of the Remote Procedure Call Paradigm'"
 	src="./images/rpc-2.png"
 	style="width: 50rem; transform: translate(14em, 4em) rotate(2deg)"
@@ -1215,7 +1256,7 @@ A little while back Jason Miller tweeted something interesting. He said, in effe
 	target="_blank"
 	href="https://twitter.com/_developit/status/1625721583095451648"
 >
-	<img
+	<enhanced:img
 		alt="Jason Miller tweeting about server functions"
 		src="./images/tweets/jason.png"
 		style="width: 60em"
@@ -1293,7 +1334,7 @@ function Component() {
 So people have asked us to add this to SvelteKit, and we've said no. Maybe one day once enough people have fucked around and found out, but not yet. We think that part of our responsibility as toolmakers is, to the extent that we're able, to help protect you and your users against these sorts of issues — so SvelteKit has built-in CSRF protection, it has CSP primitives, and we don't do things like this just because they feel convenient.
 
 ```svelte
-<img alt="Svelte logo" src="./images/svelte-logo.svg" style="width: 40em" />
+<enhanced:img alt="Svelte logo" src="./images/svelte-logo.svg" style="width: 40em" />
 ```
 
 # Build steps are good
@@ -1318,8 +1359,19 @@ This is a recent example that gained some traction from the Deno blog and it's o
 
 ```svelte
 <a rel="noreferrer" target="_blank" href="https://deno.com/blog/you-dont-need-a-build-step">
-	<img alt="You Don't Need A Build Step blogpost" src="./images/deno.png" style="width: 75em" />
+	<enhanced:img
+		alt="You Don't Need A Build Step blogpost"
+		src="./images/deno.png"
+		style="width: 75em"
+	/>
 </a>
+
+<style>
+	a {
+		width: 100%;
+		height: 100%;
+	}
+</style>
 ```
 
 ## UX over DX
@@ -1431,7 +1483,7 @@ So for the few weeks in which any of this is still relevant, let's have interest
 	href="https://twitter.com/AdhamDannaway/status/1637098283418918913"
 	style="width: 100%; height: 100%"
 >
-	<img
+	<enhanced:img
 		alt="The coming AI storm"
 		src="./images/ai.jpg"
 		style="width: 100%; height: 100%; object-fit: contain"
@@ -1444,5 +1496,5 @@ So for the few weeks in which any of this is still relevant, let's have interest
 Thank you!
 
 ```svelte
-<img alt="That's all folks" src="./images/thats-all-folks.jpg" style="width: 100%;" />
+<enhanced:img alt="That's all folks" src="./images/thats-all-folks.jpg" style="width: 100%;" />
 ```

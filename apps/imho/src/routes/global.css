@@ -24,7 +24,7 @@ body {
 	color: #ddd;
 	font-family: var(--font);
 	/* font-size: 1vw; */
-	tab-size: 6;
+	tab-size: 2;
 }
 
 .slide h1 {
@@ -33,8 +33,8 @@ body {
 	line-height: 1;
 	margin: 0;
 	font-weight: 200;
-    max-width: 12em;
-    text-align: center;
+	max-width: 12em;
+	text-align: center;
 }
 
 .part-title {
@@ -50,7 +50,7 @@ body {
 
 .slide p {
 	margin: 0;
-    font-size: 2em;
+	font-size: 2em;
 }
 
 .slide ul {
@@ -105,24 +105,39 @@ body {
 }
 
 .slide {
-    display: flex;
-    aspect-ratio: 16 / 9;
-    flex-direction: column;
-    overflow: hidden;
-    gap: 2em;
-    align-items: center;
-    justify-content: center;
+	display: flex;
+	aspect-ratio: 16 / 9;
+	flex-direction: column;
+	overflow: hidden;
+	gap: 2em;
+	align-items: center;
+	justify-content: center;
 }
 
 .slide .spice-level {
-    font-size: 4em;
-    display: flex;
+	font-size: 4em;
+	display: flex;
 }
 
 .slide .faded {
-    filter: grayscale(1) opacity(0.8);
+	filter: grayscale(1) opacity(0.8);
 }
 
 pre code {
 	font-size: 3em;
+}
+
+picture {
+	position: absolute;
+	display: flex;
+	width: 100%;
+	height: 100%;
+	align-items: center;
+	justify-content: center;
+}
+
+img {
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
 }
