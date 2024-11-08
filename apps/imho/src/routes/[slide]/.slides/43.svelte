@@ -1,3 +1,0 @@
-<script context="module">export const metadata = {"text":"<p>Another example that we&#39;re all familiar with — when you&#39;re writing a comment in GitHub, you can&#39;t preview it without sending the comment to the server so that it can render the markdown. Sometimes it&#39;s pretty slow! But you can <em>absolutely</em> do markdown rendering and syntax highlighting in the browser — maybe you&#39;d want to lazy load the grammars you&#39;re using, but it&#39;s a very solvable problem and it would provide a much nicer user experience.</p>\n","title":"GitHub","classnames":"","styles":[]};</script>
-
-<video src="./github.mp4" style="width: 80em" autoplay muted loop />

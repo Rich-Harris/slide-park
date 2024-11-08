@@ -1,3 +1,0 @@
-<script context="module">export const metadata = {"text":"<p>So people have asked us to add this to SvelteKit, and we&#39;ve said no. Maybe one day once enough people have fucked around and found out, but not yet. We think that part of our responsibility as toolmakers is, to the extent that we&#39;re able, to help protect you and your users against these sorts of issues — so SvelteKit has built-in CSRF protection, it has CSP primitives, and we don&#39;t do things like this just because they feel convenient.</p>\n","title":"SvelteKit","classnames":"","styles":[]};</script>
-
-<img alt="Svelte logo" src="./images/svelte-logo.svg" style="width: 40em" />
