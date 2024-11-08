@@ -137,7 +137,7 @@ function load(file, is_build) {
 	};
 }
 
-/** @type {(opts: { input: string, output?: string }) => import('vite').Plugin} */
+/** @type {(opts: { input: string, output?: string }) => import('vite').PluginOption} */
 export function slides({ input, output = 'src/routes' }) {
 	if (!input) {
 		throw new Error('input not specified');
