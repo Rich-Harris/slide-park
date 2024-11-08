@@ -12,8 +12,9 @@
 		"format": "prettier --plugin-search-dir . --write ."
 	},
 	"devDependencies": {
-		"@sveltejs/adapter-auto": "^2.0.0",
-		"@sveltejs/kit": "^1.20.4",
+		"@sveltejs/adapter-auto": "^3.0.0",
+		"@sveltejs/kit": "^2.0.0",
+		"@sveltejs/vite-plugin-svelte": "^3.0.0",
 		"prettier": "^2.8.0",
 		"prettier-plugin-svelte": "^2.10.1",
 		"slide-park": "workspace:*",
@@ -21,7 +22,7 @@
 		"svelte-check": "^3.4.3",
 		"svelte-preprocess-import-assets": "^0.2.6",
 		"typescript": "^5.0.0",
-		"vite": "^4.2.0"
+		"vite": "^5.0.0"
 	},
 	"type": "module",
 	"dependencies": {
