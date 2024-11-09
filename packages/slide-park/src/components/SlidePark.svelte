@@ -13,7 +13,6 @@
 	let { data, children }: Props = $props();
 
 	let mode: 'presenter' | 'viewer' = $state('presenter');
-
 	let primary = $state(true);
 
 	const active = 'slide-park:active';
@@ -101,21 +100,10 @@
 		justify-content: center;
 		transform-origin: 100% 50%;
 		transition: transform 0.2s;
-	}
 
-	.slide-park.presenter-mode {
-		transform: scale(0.25);
-	}
-
-	.slide {
-		aspect-ratio: 16 / 9;
-		background-size: cover;
-	}
-
-	.main {
-		display: grid;
-		place-items: center;
-		width: 100vw;
+		&.presenter-mode {
+			transform: scale(0.25);
+		}
 	}
 
 	.main,
@@ -123,9 +111,17 @@
 		overflow: hidden;
 	}
 
-	.slide {
-		width: 100em;
-		height: 56.25em;
+	.main {
+		display: grid;
+		place-items: center;
+		width: 100vw;
+
+		.slide {
+			aspect-ratio: 16 / 9;
+			background-size: cover;
+			width: 100em;
+			height: 56.25em;
+		}
 	}
 
 	@media (min-aspect-ratio: 16 / 9) {
