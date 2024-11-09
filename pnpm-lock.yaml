@@ -70,6 +70,9 @@ importers:
         specifier: ^5.1.12
         version: 5.1.12
     devDependencies:
+      '@sveltejs/kit':
+        specifier: ^2.5.27
+        version: 2.8.0(@sveltejs/vite-plugin-svelte@4.0.0(svelte@5.1.12)(vite@5.4.10(@types/node@18.19.64)))(svelte@5.1.12)(vite@5.4.10(@types/node@18.19.64))
       '@types/node':
         specifier: ^18.15.9
         version: 18.19.64

@@ -1,9 +1,8 @@
 <script lang="ts">
-	// @ts-ignore
 	import { page } from '$app/stores';
-	// @ts-ignore
 	import { goto, beforeNavigate, afterNavigate } from '$app/navigation';
 	import type { Slide } from '../index.d.ts';
+	import Presenter from './Presenter.svelte';
 
 	interface Props {
 		slide: Slide;
@@ -41,10 +40,6 @@
 			localStorage.setItem(current, navigation.to.url.pathname);
 		}
 	});
-
-	function pad(n) {
-		return n < 10 ? '0' + n : n;
-	}
 </script>
 
 <svelte:window
@@ -78,23 +73,8 @@
 	}}
 />
 
-<svelte:head>
-	<title>{slide.title}</title>
-</svelte:head>
-
-<div class="slide-park {mode}">
-	<div class="text">
-		<div class="content">{@html slide.text}</div>
-		<p class="progress">
-			<span style="width: 4em;">{slide.index + 1}/{slide.total}</span>
-			<progress value={(slide.index + 1) / slide.total} max="1"></progress>
-			<span style="width: 9em; text-align: right;">
-				{Math.floor(slide.remaining_seconds / 60)}m{pad(
-					slide.remaining_seconds % 60
-				)}s remaining
-			</span>
-		</p>
-	</div>
+<div class="slide-park" class:presenter-mode={mode === 'presenter'}>
+	<Presenter {slide} />
 	<div class="main">
 		<div class="slide">
 			<slide.current step={slide.step} slide={{ title: slide.title }} />
@@ -117,12 +97,8 @@
 		transition: transform 0.2s;
 	}
 
-	.slide-park.presenter {
+	.slide-park.presenter-mode {
 		transform: scale(0.25);
-	}
-
-	.text {
-		aspect-ratio: 2;
 	}
 
 	.slide {
@@ -144,60 +120,6 @@
 	.slide {
 		width: 100em;
 		height: 56.25em;
-	}
-
-	.text {
-		display: flex;
-		flex-direction: column;
-		font-family:
-			system-ui,
-			-apple-system,
-			BlinkMacSystemFont,
-			'Segoe UI',
-			Roboto,
-			Oxygen,
-			Ubuntu,
-			Cantarell,
-			'Open Sans',
-			'Helvetica Neue',
-			sans-serif;
-		font-size: 80px;
-		background: #000;
-		color: white;
-		padding: 1em;
-		overflow: hidden;
-		line-height: 1.3;
-	}
-
-	.text .content {
-		height: 0;
-		flex: 1;
-		overflow: auto;
-	}
-
-	.text .progress {
-		display: flex;
-		align-items: center;
-	}
-
-	.text .progress span {
-		width: 6em;
-		line-height: 1;
-		position: relative;
-		top: 0.05em;
-	}
-
-	.text progress {
-		flex: 1;
-		margin: 0 1em;
-		height: 1em;
-		appearance: none;
-		background: #333;
-		border: none;
-	}
-
-	.text progress::-webkit-progress-bar {
-		background: #333;
 	}
 
 	@media (min-aspect-ratio: 16 / 9) {

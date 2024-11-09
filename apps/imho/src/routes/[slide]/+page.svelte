@@ -4,4 +4,8 @@
 	let { data } = $props();
 </script>
 
+<svelte:head>
+	<title>IMHO • {data.slide.title}</title>
+</svelte:head>
+
 <SlidePark slide={data.slide} />
