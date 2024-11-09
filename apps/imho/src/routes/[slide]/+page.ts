@@ -1,5 +1,7 @@
 import { getSlide } from '../../../slides/content.md?slide-park';
 
-export function load({ params }) {
-	return getSlide(params.slide);
+export async function load({ params }) {
+	return {
+		slide: await getSlide(params.slide)
+	};
 }

@@ -73,6 +73,9 @@ importers:
       '@types/node':
         specifier: ^18.15.9
         version: 18.19.64
+      dts-buddy:
+        specifier: ^0.5.3
+        version: 0.5.3(typescript@5.6.3)
       typescript:
         specifier: ^5.0.0
         version: 5.6.3
@@ -353,6 +356,9 @@ packages:
     resolution: {integrity: sha512-R8gLRTZeyp03ymzP/6Lil/28tGeGEzhx1q2k703KGWRAI1VdvPIXdG70VJc2pAMw3NA6JKL5hhFu1sJX0Mnn/A==}
     engines: {node: '>=6.0.0'}
 
+  '@jridgewell/source-map@0.3.6':
+    resolution: {integrity: sha512-1ZJTZebgqllO79ue2bm3rIGud/bOe0pP5BjSRCRxxYkEZS8STV7zN84UBbiYu7jy+eCKSnVIUgoWWE/tt+shMQ==}
+
   '@jridgewell/sourcemap-codec@1.5.0':
     resolution: {integrity: sha512-gv3ZRaISU3fjPAgNsriBRqGWQL6quFx04YMPW/zD8XMLsU32mhCCbfbO6KZFLjvYpCZ8zyDEgqsgf+PwPaM7GQ==}
 
@@ -581,6 +587,12 @@ packages:
   devalue@5.1.1:
     resolution: {integrity: sha512-maua5KUiapvEwiEAe+XnlZ3Rh0GD+qI1J/nb9vrJc3muPXvcF/8gXYTWF76+5DAqHyDUtOIImEuo0YKE9mshVw==}
 
+  dts-buddy@0.5.3:
+    resolution: {integrity: sha512-wS2DC5T+F6R+sG/YNlJ21yn8CKVhy1QQlpKA34G+uO4PUXkwz+JQWbGcIryUByxoJgbH98O0dTGzE2RqsRR3KA==}
+    hasBin: true
+    peerDependencies:
+      typescript: '>=5.0.4 <5.6'
+
   esbuild@0.21.5:
     resolution: {integrity: sha512-mg3OPMV4hXywwpoDxu3Qda5xCKQi+vCTZq8S9J/EpkhB2HzKXq4SNFZE3+NK93JYxc8VMSep+lOUSC/RVKaBqw==}
     engines: {node: '>=12'}
@@ -786,6 +798,12 @@ packages:
   totalist@3.0.1:
     resolution: {integrity: sha512-sf4i37nQ2LBx4m3wB74y+ubopq6W/dIzXg0FDGjsYnZHVa1Da8FH853wlL2gtUhg+xJXjfk3kUZS3BRoQeoQBQ==}
     engines: {node: '>=6'}
+
+  ts-api-utils@1.4.0:
+    resolution: {integrity: sha512-032cPxaEKwM+GT3vA5JXNzIaizx388rhsSW79vGRNGXfRRAdEAn2mvk36PvK5HnOchyWZ7afLEXqYCvPCrzuzQ==}
+    engines: {node: '>=16'}
+    peerDependencies:
+      typescript: '>=4.2.0'
 
   tslib@2.8.1:
     resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
@@ -1016,6 +1034,11 @@ snapshots:
 
   '@jridgewell/set-array@1.2.1': {}
 
+  '@jridgewell/source-map@0.3.6':
+    dependencies:
+      '@jridgewell/gen-mapping': 0.3.5
+      '@jridgewell/trace-mapping': 0.3.25
+
   '@jridgewell/sourcemap-codec@1.5.0': {}
 
   '@jridgewell/trace-mapping@0.3.25':
@@ -1215,6 +1238,19 @@ snapshots:
   detect-libc@2.0.3: {}
 
   devalue@5.1.1: {}
+
+  dts-buddy@0.5.3(typescript@5.6.3):
+    dependencies:
+      '@jridgewell/source-map': 0.3.6
+      '@jridgewell/sourcemap-codec': 1.5.0
+      globrex: 0.1.2
+      kleur: 4.1.5
+      locate-character: 3.0.0
+      magic-string: 0.30.12
+      sade: 1.8.1
+      tiny-glob: 0.2.9
+      ts-api-utils: 1.4.0(typescript@5.6.3)
+      typescript: 5.6.3
 
   esbuild@0.21.5:
     optionalDependencies:
@@ -1453,6 +1489,10 @@ snapshots:
       is-number: 7.0.0
 
   totalist@3.0.1: {}
+
+  ts-api-utils@1.4.0(typescript@5.6.3):
+    dependencies:
+      typescript: 5.6.3
 
   tslib@2.8.1:
     optional: true

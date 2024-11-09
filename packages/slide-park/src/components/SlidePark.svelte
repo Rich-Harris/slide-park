@@ -3,12 +3,13 @@
 	import { page } from '$app/stores';
 	// @ts-ignore
 	import { goto, beforeNavigate, afterNavigate } from '$app/navigation';
+	import type { Slide } from '../index.d.ts';
 
 	interface Props {
-		data: Awaited<ReturnType<typeof import('./+page').load>>;
+		slide: Slide;
 	}
 
-	let { data }: Props = $props();
+	let { slide }: Props = $props();
 
 	let mode: 'presenter' | 'viewer' = $state('presenter');
 
@@ -55,13 +56,13 @@
 			primary = true;
 
 			if (e.key === 'ArrowRight' || e.key === 'Space') {
-				data.next_step && goto(data.next_step);
+				slide.next_step && goto(slide.next_step);
 			} else if (e.key === 'ArrowLeft') {
-				data.prev_step && goto(data.prev_step);
+				slide.prev_step && goto(slide.prev_step);
 			} else if (e.key === 'ArrowDown') {
-				data.next_slide && goto(data.next_slide);
+				slide.next_slide && goto(slide.next_slide);
 			} else if (e.key === 'ArrowUp') {
-				data.prev_slide && goto(data.prev_slide);
+				slide.prev_slide && goto(slide.prev_slide);
 			} else if (e.key === 'P') {
 				mode = mode === 'presenter' ? 'viewer' : 'presenter';
 			}
@@ -78,25 +79,25 @@
 />
 
 <svelte:head>
-	<title>{data.title}</title>
+	<title>{slide.title}</title>
 </svelte:head>
 
 <div class="slide-park {mode}">
 	<div class="text">
-		<div class="content">{@html data.text}</div>
+		<div class="content">{@html slide.text}</div>
 		<p class="progress">
-			<span style="width: 4em;">{data.index + 1}/{data.total}</span>
-			<progress value={(data.index + 1) / data.total} max="1"></progress>
+			<span style="width: 4em;">{slide.index + 1}/{slide.total}</span>
+			<progress value={(slide.index + 1) / slide.total} max="1"></progress>
 			<span style="width: 9em; text-align: right;">
-				{Math.floor(data.remaining_seconds / 60)}m{pad(
-					data.remaining_seconds % 60
+				{Math.floor(slide.remaining_seconds / 60)}m{pad(
+					slide.remaining_seconds % 60
 				)}s remaining
 			</span>
 		</p>
 	</div>
 	<div class="main">
-		<div class="slide {data.classnames}" style={data.styles}>
-			<data.current step={data.step} slide={{ title: data.title }} />
+		<div class="slide {slide.classnames}" style={slide.styles}>
+			<slide.current step={slide.step} slide={{ title: slide.title }} />
 		</div>
 	</div>
 </div>

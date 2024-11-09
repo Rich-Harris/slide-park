@@ -1,29 +1,11 @@
+/** @import { Slide, Style } from './types.js' */
 import * as fs from 'node:fs';
 import * as url from 'node:url';
 import { marked } from 'marked';
 
-const asset_dir = url.fileURLToPath(new URL('assets', import.meta.url));
+const asset_dir = url.fileURLToPath(new URL('.', import.meta.url));
 
-const template = fs.readFileSync(`${asset_dir}/load.js`, 'utf-8'); // TODO rename
-
-/**
- * @typedef
- * {{
- *   key: string;
- *   value: string;
- * }}
- * Style
- */
-
-/**
- * @typedef
- * {{
- *   steps: number;
- *   words: number;
- *   component: string;
- * }}
- * Slide
- */
+const template = fs.readFileSync(`${asset_dir}/template.js`, 'utf-8');
 
 /**
  * @param {string} file
@@ -53,7 +35,7 @@ function load(file, is_build) {
 			let classnames = '';
 			let steps = 1;
 
-			/** @type {Style[]>} */
+			/** @type {Style[]} */
 			const styles = [];
 
 			if (match[2]) {

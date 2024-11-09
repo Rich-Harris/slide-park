@@ -1,5 +1,4 @@
-// @ts-ignore
-import Slide from 'slide-park:Slide.svelte';
+import SlidePark from '@rich_harris/slide-park';
 
 const WORDS_PER_MINUTE = 180;
 const WORDS_PER_SECOND = WORDS_PER_MINUTE / 60;
@@ -37,7 +36,7 @@ export async function getSlide(slug) {
 	const remaining_seconds = Math.round(remaining_words / WORDS_PER_SECOND);
 
 	return {
-		component: Slide,
+		component: SlidePark,
 		index,
 		total: slides.length,
 		remaining_seconds,
