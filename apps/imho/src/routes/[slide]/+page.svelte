@@ -1,11 +1,8 @@
 <script lang="ts">
 	import SlidePark from '@rich_harris/slide-park';
+	import '../global.css';
 
-	interface Props {
-		data: Awaited<ReturnType<typeof import('./+page').load>>;
-	}
-
-	let { data }: Props = $props();
+	let { data } = $props();
 </script>
 
 <SlidePark slide={data.slide} />
