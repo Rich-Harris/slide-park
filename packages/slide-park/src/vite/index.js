@@ -1,4 +1,3 @@
-/** @import { SlideData } from './types.js' */
 import * as fs from 'node:fs';
 import * as url from 'node:url';
 import { marked } from 'marked';
@@ -9,78 +8,72 @@ const template = fs.readFileSync(`${asset_dir}/template.js`, 'utf-8');
 
 /**
  * @param {string} file
- * @param {boolean} is_build
- * @returns {{ slides: SlideData[] }}
+ * @returns {Array<{ steps: number; words: number; component: string; }>}
  */
-function load(file, is_build) {
+function load(file) {
 	const markdown = fs.readFileSync(file, 'utf-8');
 
 	const slides = markdown.split(/^#+ /m).slice(1);
 
-	return {
-		slides: slides.map((content, i) => {
-			content = content.trim();
+	return slides.map((content, i) => {
+		content = content.trim();
 
-			const pattern =
-				/(.+)\n*((?:> [^\n]+\n?)+)?(?:\n([\s\S]+?))?(?:\n+```svelte\n*([\s\S]+)\n*```)?$/;
+		const pattern =
+			/(.+)\n*((?:> [^\n]+\n?)+)?(?:\n([\s\S]+?))?(?:\n+```svelte\n*([\s\S]+)\n*```)?$/;
 
-			const match = pattern.exec(content);
+		const match = pattern.exec(content);
 
-			if (!match) {
-				throw new Error(`Invalid slide: \n---\n${content}\n---`);
-			}
+		if (!match) {
+			throw new Error(`Invalid slide: \n---\n${content}\n---`);
+		}
 
-			const title = match[1].trim();
+		const title = match[1].trim();
 
-			let steps = 1;
+		let steps = 1;
 
-			if (match[2]) {
-				for (const line of match[2].trim().split('\n')) {
-					const [key, value] = line
-						.slice(2)
-						.split(':')
-						.map((str) => str.trim());
+		if (match[2]) {
+			for (const line of match[2].trim().split('\n')) {
+				const [key, value] = line
+					.slice(2)
+					.split(':')
+					.map((str) => str.trim());
 
-					if (key === 'steps') {
-						steps = Number(value);
-					} else {
-						throw new Error(`Unknown config key: ${key}`);
-					}
+				if (key === 'steps') {
+					steps = Number(value);
+				} else {
+					throw new Error(`Unknown config key: ${key}`);
 				}
 			}
+		}
 
-			let text = match[3] ?? '';
-			let component = match[4] ?? '';
+		let text = match[3] ?? '';
+		let component = match[4] ?? '';
 
-			if (text.startsWith('```svelte')) {
-				component = text.slice('```svelte\n'.length, -'```\n'.length).trim();
-				text = '';
-			}
+		if (text.startsWith('```svelte')) {
+			component = text.slice('```svelte\n'.length, -'```\n'.length).trim();
+			text = '';
+		}
 
-			if (!component) {
-				const message = `Missing component for slide ${i + 1} ("${title}")`;
+		if (!component) {
+			const message = `Missing component for slide ${i + 1} ("${title}")`;
 
-				console.error(`\u001B[1m\u001B[31m${message}\u001B[39m\u001B[22m`);
-				component = `<h1 style="color: hotpink">${title}</h1>`;
-			}
+			console.error(`\u001B[1m\u001B[31m${message}\u001B[39m\u001B[22m`);
+			component = `<h1 style="color: hotpink">${title}</h1>`;
+		}
 
-			const metadata = JSON.stringify({
-				text: marked(text),
-				title
-			});
+		const metadata = JSON.stringify({
+			text: marked(text),
+			title
+		});
 
-			component = `<script context="module">export const metadata = ${metadata};</script>\n\n${component}`;
+		component = `<script context="module">export const metadata = ${metadata};</script>\n\n${component}`;
 
-			/** @type {SlideData} */
-			const slide = {
-				steps,
-				words: text.split(/\s+/).length,
-				component
-			};
-
-			return slide;
-		})
-	};
+		return {
+			steps,
+			words: text.split(/\s+/).length,
+			component
+		};
+	});
 }
 
 /**
@@ -122,7 +115,7 @@ export function slides() {
 				if (q.has('slide-park')) {
 					let slides = lookup.get(file);
 					if (!slides) {
-						slides = load(file, is_build).slides;
+						slides = load(file);
 						lookup.set(file, slides);
 					}
 
@@ -185,7 +178,7 @@ export function slides() {
 		configureServer(vite) {
 			vite.watcher.on('change', (file) => {
 				if (lookup.has(file)) {
-					lookup.set(file, load(file, false).slides);
+					lookup.set(file, load(file));
 				}
 			});
 		}
