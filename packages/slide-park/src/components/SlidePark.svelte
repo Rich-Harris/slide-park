@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { goto, beforeNavigate, afterNavigate } from '$app/navigation';
+	import { goto, afterNavigate } from '$app/navigation';
 	import type { SlideData } from '../index.d.ts';
 	import Presenter from './Presenter.svelte';
 	import type { Snippet } from 'svelte';
@@ -15,29 +15,10 @@
 	let mode: 'presenter' | 'viewer' = $state('presenter');
 	let primary = $state(true);
 
-	const active = 'slide-park:active';
 	const current = 'slide-park:current';
 
-	beforeNavigate(({ willUnload }) => {
-		if (willUnload) {
-			const count = +(localStorage.getItem(active) ?? '0');
-			if (count <= 1) {
-				localStorage.removeItem(active);
-				localStorage.removeItem(current);
-			} else {
-				localStorage.setItem(active, String(count - 1));
-			}
-		}
-	});
-
 	afterNavigate((navigation) => {
-		if (navigation.type === 'enter') {
-			const pathname = localStorage.getItem(current);
-			if (pathname) goto(pathname);
-
-			const count = +(localStorage.getItem(active) ?? '0');
-			localStorage.setItem(active, String(count + 1));
-		} else if ((primary || navigation.type === 'popstate') && navigation.to) {
+		if (primary && navigation.to) {
 			localStorage.setItem(current, navigation.to.url.pathname);
 		}
 	});

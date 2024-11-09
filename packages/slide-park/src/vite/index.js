@@ -6,6 +6,9 @@ const asset_dir = url.fileURLToPath(new URL('.', import.meta.url));
 
 const template = fs.readFileSync(`${asset_dir}/template.js`, 'utf-8');
 
+const pattern =
+	/(.+)\n*((?:> [^\n]+\n?)+)?(?:\n([\s\S]+?))?(?:\n+```svelte\n*([\s\S]+)\n*```)?[\s\n]+$/;
+
 /**
  * @param {string} file
  * @returns {Array<{ steps: number; words: number; component: string; }>}
@@ -13,26 +16,22 @@ const template = fs.readFileSync(`${asset_dir}/template.js`, 'utf-8');
 function load(file) {
 	const markdown = fs.readFileSync(file, 'utf-8');
 
-	const slides = markdown.split(/^#+ /m).slice(1);
+	/** @type {Array<{ steps: number; words: number; component: string; }>} */
+	const slides = [];
 
-	return slides.map((content, i) => {
-		content = content.trim();
-
-		const pattern =
-			/(.+)\n*((?:> [^\n]+\n?)+)?(?:\n([\s\S]+?))?(?:\n+```svelte\n*([\s\S]+)\n*```)?$/;
-
+	for (let content of markdown.split(/^#+ /m).slice(1)) {
 		const match = pattern.exec(content);
 
 		if (!match) {
 			throw new Error(`Invalid slide: \n---\n${content}\n---`);
 		}
 
-		const title = match[1].trim();
+		let [_, title, config, text = '', component = ''] = match;
 
 		let steps = 1;
 
-		if (match[2]) {
-			for (const line of match[2].trim().split('\n')) {
+		if (config) {
+			for (const line of config.trim().split('\n')) {
 				const [key, value] = line
 					.slice(2)
 					.split(':')
@@ -46,19 +45,20 @@ function load(file) {
 			}
 		}
 
-		let text = match[3] ?? '';
-		let component = match[4] ?? '';
-
 		if (text.startsWith('```svelte')) {
 			component = text.slice('```svelte\n'.length, -'```\n'.length).trim();
 			text = '';
 		}
 
 		if (!component) {
-			const message = `Missing component for slide ${i + 1} ("${title}")`;
+			const message = `Missing component for slide ${slides.length + 1} ("${title}")`;
 
 			console.error(`\u001B[1m\u001B[31m${message}\u001B[39m\u001B[22m`);
 			component = `<h1 style="color: hotpink">${title}</h1>`;
+
+			if (text === '') {
+				continue;
+			}
 		}
 
 		const metadata = JSON.stringify({
@@ -68,12 +68,14 @@ function load(file) {
 
 		component = `<script context="module">export const metadata = ${metadata};</script>\n\n${component}`;
 
-		return {
+		slides.push({
 			steps,
 			words: text.split(/\s+/).length,
 			component
-		};
-	});
+		});
+	}
+
+	return slides;
 }
 
 /**
