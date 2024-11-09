@@ -1,4 +1,4 @@
-import type { Component } from 'svelte';
+import type { Component, Snippet } from 'svelte';
 import './ambient.d.ts';
 
 export interface Slide {
@@ -26,6 +26,6 @@ export interface SlideData {
 	step: number;
 }
 
-declare const SlidePark: Component<{ data: SlideData }>;
+declare const SlidePark: Component<{ data: SlideData; children?: Snippet }>;
 
 export default SlidePark;

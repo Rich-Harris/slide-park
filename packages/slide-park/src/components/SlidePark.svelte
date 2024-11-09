@@ -3,12 +3,14 @@
 	import { goto, beforeNavigate, afterNavigate } from '$app/navigation';
 	import type { SlideData } from '../index.d.ts';
 	import Presenter from './Presenter.svelte';
+	import type { Snippet } from 'svelte';
 
 	interface Props {
 		data: SlideData;
+		children?: Snippet;
 	}
 
-	let { data }: Props = $props();
+	let { data, children }: Props = $props();
 
 	let mode: 'presenter' | 'viewer' = $state('presenter');
 
@@ -77,10 +79,11 @@
 	<Presenter {data} />
 	<div class="main">
 		<div class="slide">
-			<data.current.component
-				step={data.step}
-				slide={{ title: data.current.title }}
-			/>
+			{#if children}
+				{@render children()}
+			{:else}
+				<data.current.component step={data.step} />
+			{/if}
 		</div>
 	</div>
 </div>

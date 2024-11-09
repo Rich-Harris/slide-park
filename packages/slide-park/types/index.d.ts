@@ -1,5 +1,5 @@
 declare module '@rich_harris/slide-park' {
-	import type { Component } from 'svelte';
+	import type { Component, Snippet } from 'svelte';
 	export interface Slide {
 		index: number;
 		steps: number;
@@ -25,7 +25,7 @@ declare module '@rich_harris/slide-park' {
 		step: number;
 	}
 
-	const SlidePark: Component<{ data: SlideData }>;
+	const SlidePark: Component<{ data: SlideData; children?: Snippet }>;
 
 	export default SlidePark;
 

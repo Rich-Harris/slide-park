@@ -34,7 +34,6 @@ Finally, while I think the Svelte team would mostly agree with the things I'll s
 	import SpiceFall from './components/SpiceFall.svelte';
 
 	export let step;
-	export let slide;
 </script>
 
 <SpiceFall />

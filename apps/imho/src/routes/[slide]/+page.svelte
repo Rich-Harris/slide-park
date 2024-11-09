@@ -8,4 +8,6 @@
 	<title>IMHO • {data.current.title}</title>
 </svelte:head>
 
-<SlidePark {data} />
+<SlidePark {data}>
+	<data.current.component step={data.step} />
+</SlidePark>
