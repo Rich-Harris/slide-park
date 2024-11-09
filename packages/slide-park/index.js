@@ -1,10 +1,8 @@
 import * as fs from 'node:fs';
-import * as path from 'node:path';
 import * as url from 'node:url';
 import { marked } from 'marked';
 
 const asset_dir = url.fileURLToPath(new URL('assets', import.meta.url));
-const assets = fs.readdirSync(asset_dir);
 
 const template = fs.readFileSync(`${asset_dir}/load.js`, 'utf-8'); // TODO rename
 
@@ -26,22 +24,6 @@ const template = fs.readFileSync(`${asset_dir}/load.js`, 'utf-8'); // TODO renam
  * }}
  * Slide
  */
-
-/**
- *
- * @param {Slide[]} slides
- */
-const index = (slides) => `export const slides = [
-	${slides
-		.map(
-			(slide, i) => `{
-		steps: ${slide.steps},
-		words: ${slide.words},
-		load: () => import(${JSON.stringify(`./${i}.svelte`)})
-	}`
-		)
-		.join(',\n\t')}
-];`;
 
 /**
  * @param {string} file
@@ -108,8 +90,6 @@ function load(file, is_build) {
 			if (!component) {
 				const message = `Missing component for slide ${i + 1} ("${title}")`;
 
-				if (is_build) throw new Error(message);
-
 				console.error(`\u001B[1m\u001B[31m${message}\u001B[39m\u001B[22m`);
 				component = `<h1 style="color: hotpink">${title}</h1>`;
 			}
@@ -135,74 +115,13 @@ function load(file, is_build) {
 	};
 }
 
-/** @type {(opts: { input: string, output?: string }) => import('vite').PluginOption} */
-export function slides({ input, output = 'src/routes' }) {
-	if (!input) {
-		throw new Error('input not specified');
-	}
-
-	input = path.resolve(input);
-	const dest = path.resolve(output, '[slide]/.slides');
-
-	fs.rmSync(dest, { recursive: true, force: true });
-	fs.cpSync(input, dest, { recursive: true });
-
-	const cache = new Map();
-
-	/**
-	 * @param {string} file
-	 * @param {string | Buffer} contents
-	 */
-	function write(file, contents) {
-		const cached = cache.get(file);
-
-		if (cached && cached.length === contents.length) {
-			let identical = true;
-			for (let i = 0; i < cached.length; i += 1) {
-				if (cached[i] !== contents[0]) {
-					identical = false;
-					break;
-				}
-			}
-
-			if (identical) return;
-		}
-
-		try {
-			fs.mkdirSync(path.dirname(file), { recursive: true });
-		} catch {}
-
-		fs.writeFileSync(file, contents);
-		cache.set(file, contents);
-	}
-
-	/** @param {boolean} is_build */
-	async function render(is_build) {
-		const { slides } = load(`${input}/content.md`, is_build);
-
-		for (let i = 0; i < slides.length; i += 1) {
-			const slide = slides[i];
-			write(`${dest}/${i}.svelte`, slide.component);
-		}
-
-		write(`${dest}/index.js`, index(slides));
-
-		for (const asset of assets) {
-			write(
-				`${output}/[slide]/${asset}`,
-				fs.readFileSync(`${asset_dir}/${asset}`)
-			);
-		}
-	}
-
-	const base = path.resolve(input) + path.sep;
-	const doc = base + 'content.md';
-
-	let is_build = false;
-
-	const lookup = new Map();
-
+/**
+ * @returns {import('vite').PluginOption}
+ */
+export function slides() {
+	let lookup = new Map();
 	let svelte_plugin;
+	let is_build = false;
 
 	return {
 		name: 'slides',
@@ -213,6 +132,7 @@ export function slides({ input, output = 'src/routes' }) {
 			svelte_plugin = config.plugins.find(
 				(plugin) => plugin.name === 'vite-plugin-svelte'
 			);
+
 			if (!svelte_plugin) {
 				throw new Error(`Could not find vite-plugin-svelte`);
 			}
@@ -232,7 +152,11 @@ export function slides({ input, output = 'src/routes' }) {
 				const q = new URLSearchParams(params);
 
 				if (q.has('slide-park')) {
-					const { slides } = load(file, is_build);
+					let slides = lookup.get(file);
+					if (!slides) {
+						slides = load(file, is_build).slides;
+						lookup.set(file, slides);
+					}
 
 					const i = q.get('slide');
 
@@ -245,8 +169,6 @@ export function slides({ input, output = 'src/routes' }) {
 					}
 
 					lookup.set(file, slides);
-
-					const dir = path.dirname(file);
 
 					const index = template.replace(
 						'SLIDES',
@@ -288,39 +210,10 @@ export function slides({ input, output = 'src/routes' }) {
 			}
 		},
 
-		buildStart() {
-			render(is_build);
-		},
-
 		configureServer(vite) {
-			vite.watcher.on('add', (file) => {
-				if (!file.startsWith(input + path.sep)) return;
-
-				const relative = path.relative(input, file);
-				const resolved = path.join(dest, relative);
-
-				try {
-					fs.mkdirSync(path.dirname(resolved), { recursive: true });
-				} catch {}
-
-				fs.copyFileSync(file, path.join(dest, relative));
-			});
-
-			vite.watcher.on('unlink', (file) => {
-				if (!file.startsWith(input + path.sep)) return;
-
-				const relative = path.relative(input, file);
-				fs.unlinkSync(path.join(dest, relative));
-			});
-
 			vite.watcher.on('change', (file) => {
-				if (!file.startsWith(input + path.sep)) return;
-
-				if (file === doc) {
-					render(false);
-				} else {
-					const relative = path.relative(input, file);
-					fs.copyFileSync(file, path.join(dest, relative));
+				if (lookup.has(file)) {
+					lookup.set(file, load(file, false).slides);
 				}
 			});
 		}
