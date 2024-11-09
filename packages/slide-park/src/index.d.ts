@@ -14,7 +14,6 @@ export interface Slide {
 	text: string;
 	title: string;
 	styles: Array<{ key: string; value: string }>;
-	classnames: string;
 	current: Component;
 	step: number;
 }

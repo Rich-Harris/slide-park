@@ -96,7 +96,7 @@
 		</p>
 	</div>
 	<div class="main">
-		<div class="slide {slide.classnames}" style={slide.styles}>
+		<div class="slide">
 			<slide.current step={slide.step} slide={{ title: slide.title }} />
 		</div>
 	</div>

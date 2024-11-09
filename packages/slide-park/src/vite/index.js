@@ -1,4 +1,4 @@
-/** @import { Slide, Style } from './types.js' */
+/** @import { SlideData } from './types.js' */
 import * as fs from 'node:fs';
 import * as url from 'node:url';
 import { marked } from 'marked';
@@ -10,7 +10,7 @@ const template = fs.readFileSync(`${asset_dir}/template.js`, 'utf-8');
 /**
  * @param {string} file
  * @param {boolean} is_build
- * @returns {{ slides: Slide[] }}
+ * @returns {{ slides: SlideData[] }}
  */
 function load(file, is_build) {
 	const markdown = fs.readFileSync(file, 'utf-8');
@@ -32,11 +32,7 @@ function load(file, is_build) {
 
 			const title = match[1].trim();
 
-			let classnames = '';
 			let steps = 1;
-
-			/** @type {Style[]} */
-			const styles = [];
 
 			if (match[2]) {
 				for (const line of match[2].trim().split('\n')) {
@@ -45,16 +41,8 @@ function load(file, is_build) {
 						.split(':')
 						.map((str) => str.trim());
 
-					if (key.startsWith('--')) {
-						if (value.startsWith('url(')) {
-							// TODO extract relative URLs
-						}
-
-						styles.push({ key, value });
-					} else if (key === 'steps') {
+					if (key === 'steps') {
 						steps = Number(value);
-					} else if (key === 'class') {
-						classnames = value;
 					} else {
 						throw new Error(`Unknown config key: ${key}`);
 					}
@@ -78,14 +66,12 @@ function load(file, is_build) {
 
 			const metadata = JSON.stringify({
 				text: marked(text),
-				title,
-				classnames,
-				styles
+				title
 			});
 
 			component = `<script context="module">export const metadata = ${metadata};</script>\n\n${component}`;
 
-			/** @type {Slide} */
+			/** @type {SlideData} */
 			const slide = {
 				steps,
 				words: text.split(/\s+/).length,
@@ -146,7 +132,8 @@ export function slides() {
 						const slide = slides[i];
 
 						return {
-							code: slide.component
+							code: slide.component,
+							map: null
 						};
 					}
 
@@ -164,7 +151,7 @@ export function slides() {
 
 					return {
 						code: index,
-						map: ''
+						map: null
 					};
 				}
 			}
@@ -186,7 +173,10 @@ export function slides() {
 							opts
 						);
 
-						return transformed;
+						return {
+							...transformed,
+							map: null
+						};
 					}
 				}
 			}

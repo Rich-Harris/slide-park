@@ -9,7 +9,6 @@ Open in a separate window to have presenter/viewer modes simultaneously
 # IMHO
 
 > steps: 4
-> class: centered
 
 Hi everyone. Thank you all for being here.
 
@@ -49,7 +48,7 @@ Finally, while I think the Svelte team would mostly agree with the things I'll s
 
 <style>
 	h1 {
-		font-size: 12em;
+		font-size: 12em !important;
 		font-family: 'Sue Ellen Francisco';
 		filter: drop-shadow(0 0 0.2em black) drop-shadow(0 0 0.2em black) drop-shadow(0 0 0.2em black)
 			drop-shadow(0 0 0.2em black);

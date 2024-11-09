@@ -1,10 +1,11 @@
+/** @import { SlideLoader } from './types.js' */
 import SlidePark from '@rich_harris/slide-park';
 
 const WORDS_PER_MINUTE = 180;
 const WORDS_PER_SECOND = WORDS_PER_MINUTE / 60;
 
 // @ts-ignore
-const slides = SLIDES;
+const slides = /** @type {SlideLoader[]} */ (SLIDES);
 
 export async function getSlide(slug) {
 	const match = /^(\d+)-(\d+)$/.exec(slug);
@@ -47,8 +48,6 @@ export async function getSlide(slug) {
 		steps: slide.steps,
 		text: module.metadata.text,
 		title: module.metadata.title,
-		styles: module.metadata.styles,
-		classnames: module.metadata.classnames,
 		current: module.default,
 		step: +match[2]
 	};
