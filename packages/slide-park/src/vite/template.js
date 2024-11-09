@@ -1,5 +1,7 @@
+/** @import { Slide } from '../index.js' */
 /** @import { SlideLoader } from './types.js' */
-import SlidePark from '@rich_harris/slide-park';
+
+import { error } from '@sveltejs/kit';
 
 const WORDS_PER_MINUTE = 180;
 const WORDS_PER_SECOND = WORDS_PER_MINUTE / 60;
@@ -7,15 +9,20 @@ const WORDS_PER_SECOND = WORDS_PER_MINUTE / 60;
 // @ts-ignore
 const slides = /** @type {SlideLoader[]} */ (SLIDES);
 
+/**
+ *
+ * @param {string} slug
+ * @returns {Promise<Slide>}
+ */
 export async function getSlide(slug) {
 	const match = /^(\d+)-(\d+)$/.exec(slug);
-	if (!match) return { status: 404 };
+	if (!match) error(404);
 
 	const index = +match[1] - 1;
 	const step = +match[2];
 
-	const slide = slides[index];
-	if (!slide) return { status: 404 };
+	const loader = slides[index];
+	if (!loader) error(404);
 
 	const prev = slides[index - 1] ?? null;
 	const next = slides[index + 1] ?? null;
@@ -25,9 +32,9 @@ export async function getSlide(slug) {
 
 	const prev_step = step > 0 ? `${match[1]}-${step - 1}` : prev_slide;
 	const next_step =
-		step < slide.steps - 1 ? `${match[1]}-${step + 1}` : next_slide;
+		step < loader.steps - 1 ? `${match[1]}-${step + 1}` : next_slide;
 
-	const module = await slide.load();
+	const module = await loader.load();
 
 	const remaining_words = slides
 		.slice(index)
@@ -36,8 +43,8 @@ export async function getSlide(slug) {
 
 	const remaining_seconds = Math.round(remaining_words / WORDS_PER_SECOND);
 
-	return {
-		component: SlidePark,
+	/** @type {Slide} */
+	const slide = {
 		index,
 		total: slides.length,
 		remaining_seconds,
@@ -45,10 +52,12 @@ export async function getSlide(slug) {
 		next_step,
 		prev_slide,
 		next_slide,
-		steps: slide.steps,
+		steps: loader.steps,
 		text: module.metadata.text,
 		title: module.metadata.title,
 		current: module.default,
 		step: +match[2]
 	};
+
+	return slide;
 }

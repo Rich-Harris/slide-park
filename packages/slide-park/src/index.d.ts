@@ -2,7 +2,6 @@ import type { Component } from 'svelte';
 import './ambient.d.ts';
 
 export interface Slide {
-	component: Component;
 	index: number;
 	total: number;
 	remaining_seconds: number;
@@ -13,7 +12,6 @@ export interface Slide {
 	steps: number;
 	text: string;
 	title: string;
-	styles: Array<{ key: string; value: string }>;
 	current: Component;
 	step: number;
 }
