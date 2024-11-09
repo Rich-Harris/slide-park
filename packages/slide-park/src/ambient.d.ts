@@ -1,7 +1,7 @@
 declare module '*?slide-park' {
 	function getSlide(
 		slug: string
-	): Promise<import('@rich_harris/slide-park').Slide>;
+	): Promise<import('@rich_harris/slide-park').SlideData>;
 
 	export { getSlide };
 }

@@ -5,7 +5,7 @@
 </script>
 
 <svelte:head>
-	<title>IMHO • {data.slide.title}</title>
+	<title>IMHO • {data.current.title}</title>
 </svelte:head>
 
-<SlidePark slide={data.slide} />
+<SlidePark {data} />

@@ -1,23 +1,31 @@
 declare module '@rich_harris/slide-park' {
 	import type { Component } from 'svelte';
 	export interface Slide {
-		component: Component;
 		index: number;
-		total: number;
-		remaining_seconds: number;
-		prev_step: string;
-		next_step: string;
-		prev_slide: string;
-		next_slide: string;
 		steps: number;
 		text: string;
 		title: string;
-		styles: Array<{ key: string; value: string }>;
-		current: Component;
+		component: Component;
+	}
+
+	export interface SlideData {
+		/** The number of slides */
+		total: number;
+		/** The estimated remaining time, in seconds */
+		remaining: number;
+		prev: {
+			slide: string | null;
+			step: string | null;
+		};
+		next: {
+			slide: string | null;
+			step: string | null;
+		};
+		current: Slide;
 		step: number;
 	}
 
-	const SlidePark: Component<{ slide: Slide }>;
+	const SlidePark: Component<{ data: SlideData }>;
 
 	export default SlidePark;
 
@@ -31,7 +39,7 @@ declare module '@rich_harris/slide-park/vite' {
 }declare module '*?slide-park' {
 	function getSlide(
 		slug: string
-	): Promise<import('@rich_harris/slide-park').Slide>;
+	): Promise<import('@rich_harris/slide-park').SlideData>;
 
 	export { getSlide };
 }

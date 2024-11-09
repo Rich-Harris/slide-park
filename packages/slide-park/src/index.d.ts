@@ -3,19 +3,29 @@ import './ambient.d.ts';
 
 export interface Slide {
 	index: number;
-	total: number;
-	remaining_seconds: number;
-	prev_step: string;
-	next_step: string;
-	prev_slide: string;
-	next_slide: string;
 	steps: number;
 	text: string;
 	title: string;
-	current: Component;
+	component: Component;
+}
+
+export interface SlideData {
+	/** The number of slides */
+	total: number;
+	/** The estimated remaining time, in seconds */
+	remaining: number;
+	prev: {
+		slide: string | null;
+		step: string | null;
+	};
+	next: {
+		slide: string | null;
+		step: string | null;
+	};
+	current: Slide;
 	step: number;
 }
 
-declare const SlidePark: Component<{ slide: Slide }>;
+declare const SlidePark: Component<{ data: SlideData }>;
 
 export default SlidePark;

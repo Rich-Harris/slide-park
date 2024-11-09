@@ -1,11 +1,11 @@
 <script lang="ts">
-	import type { Slide } from '../index.js';
+	import type { SlideData } from '../index.js';
 
 	interface Props {
-		slide: Slide;
+		data: SlideData;
 	}
 
-	let { slide }: Props = $props();
+	let { data }: Props = $props();
 
 	function pad(n: number) {
 		return n < 10 ? '0' + n : n;
@@ -13,14 +13,12 @@
 </script>
 
 <div class="text">
-	<div class="content">{@html slide.text}</div>
+	<div class="content">{@html data.current.text}</div>
 	<p class="progress">
-		<span style="width: 4em;">{slide.index + 1}/{slide.total}</span>
-		<progress value={(slide.index + 1) / slide.total} max="1"></progress>
+		<span style="width: 4em;">{data.current.index + 1}/{data.total}</span>
+		<progress value={(data.current.index + 1) / data.total} max="1"></progress>
 		<span style="width: 9em; text-align: right;">
-			{Math.floor(slide.remaining_seconds / 60)}m{pad(
-				slide.remaining_seconds % 60
-			)}s remaining
+			{Math.floor(data.remaining / 60)}m{pad(data.remaining % 60)}s remaining
 		</span>
 	</p>
 </div>

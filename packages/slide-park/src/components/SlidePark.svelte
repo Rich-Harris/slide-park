@@ -1,14 +1,14 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { goto, beforeNavigate, afterNavigate } from '$app/navigation';
-	import type { Slide } from '../index.d.ts';
+	import type { SlideData } from '../index.d.ts';
 	import Presenter from './Presenter.svelte';
 
 	interface Props {
-		slide: Slide;
+		data: SlideData;
 	}
 
-	let { slide }: Props = $props();
+	let { data }: Props = $props();
 
 	let mode: 'presenter' | 'viewer' = $state('presenter');
 
@@ -51,13 +51,13 @@
 			primary = true;
 
 			if (e.key === 'ArrowRight' || e.key === 'Space') {
-				slide.next_step && goto(slide.next_step);
+				data.next.step && goto(data.next.step);
 			} else if (e.key === 'ArrowLeft') {
-				slide.prev_step && goto(slide.prev_step);
+				data.prev.step && goto(data.prev.step);
 			} else if (e.key === 'ArrowDown') {
-				slide.next_slide && goto(slide.next_slide);
+				data.next.slide && goto(data.next.slide);
 			} else if (e.key === 'ArrowUp') {
-				slide.prev_slide && goto(slide.prev_slide);
+				data.prev.slide && goto(data.prev.slide);
 			} else if (e.key === 'P') {
 				mode = mode === 'presenter' ? 'viewer' : 'presenter';
 			}
@@ -74,10 +74,13 @@
 />
 
 <div class="slide-park" class:presenter-mode={mode === 'presenter'}>
-	<Presenter {slide} />
+	<Presenter {data} />
 	<div class="main">
 		<div class="slide">
-			<slide.current step={slide.step} slide={{ title: slide.title }} />
+			<data.current.component
+				step={data.step}
+				slide={{ title: data.current.title }}
+			/>
 		</div>
 	</div>
 </div>

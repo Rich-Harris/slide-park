@@ -1,4 +1,4 @@
-/** @import { Slide } from '../index.js' */
+/** @import { SlideData } from '../index.js' */
 /** @import { SlideLoader } from './types.js' */
 
 import { error } from '@sveltejs/kit';
@@ -12,7 +12,7 @@ const slides = /** @type {SlideLoader[]} */ (SLIDES);
 /**
  *
  * @param {string} slug
- * @returns {Promise<Slide>}
+ * @returns {Promise<SlideData>}
  */
 export async function getSlide(slug) {
 	const match = /^(\d+)-(\d+)$/.exec(slug);
@@ -41,23 +41,29 @@ export async function getSlide(slug) {
 		.map((slide) => slide.words)
 		.reduce((a, b) => a + b, 0);
 
-	const remaining_seconds = Math.round(remaining_words / WORDS_PER_SECOND);
+	const remaining = Math.round(remaining_words / WORDS_PER_SECOND);
 
-	/** @type {Slide} */
-	const slide = {
-		index,
+	/** @type {SlideData} */
+	const data = {
 		total: slides.length,
-		remaining_seconds,
-		prev_step,
-		next_step,
-		prev_slide,
-		next_slide,
-		steps: loader.steps,
-		text: module.metadata.text,
-		title: module.metadata.title,
-		current: module.default,
+		remaining,
+		prev: {
+			slide: prev_slide,
+			step: prev_step
+		},
+		next: {
+			slide: next_slide,
+			step: next_step
+		},
+		current: {
+			index,
+			text: module.metadata.text,
+			title: module.metadata.title,
+			steps: loader.steps,
+			component: module.default
+		},
 		step: +match[2]
 	};
 
-	return slide;
+	return data;
 }
