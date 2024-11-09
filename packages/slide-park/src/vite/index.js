@@ -82,27 +82,17 @@ function load(file) {
 export function slides() {
 	let lookup = new Map();
 	let svelte_plugin;
-	let is_build = false;
 
 	return {
-		name: 'slides',
+		name: 'slide-park',
 
 		configResolved(config) {
-			is_build = config.command === 'build';
-
 			svelte_plugin = config.plugins.find(
 				(plugin) => plugin.name === 'vite-plugin-svelte'
 			);
 
 			if (!svelte_plugin) {
 				throw new Error(`Could not find vite-plugin-svelte`);
-			}
-		},
-
-		resolveId(importee, importer) {
-			if (importee === 'slide-park:Slide.svelte') {
-				// TODO do we need to faff around with virtual paths? we can just expose it from the package i think
-				return `${asset_dir}/Slide.svelte`;
 			}
 		},
 
