@@ -270,7 +270,6 @@ A single number simply can't capture that nuance, and you should be wary of peop
 	.performance {
 		display: flex;
 		flex-direction: column;
-		height: 100%;
 		justify-content: center;
 	}
 </style>
@@ -352,6 +351,7 @@ Maybe you don't care about what Kim Kardashian was wearing in 2017. But so much 
 	>
 		<div>
 			<enhanced:img
+				class="grid-item"
 				alt="Kim Kardashian's Instagram account in 2014"
 				src="./images/kardashian/2014.png"
 			/>
@@ -366,6 +366,7 @@ Maybe you don't care about what Kim Kardashian was wearing in 2017. But so much 
 	>
 		<div>
 			<enhanced:img
+				class="grid-item"
 				alt="Kim Kardashian's Instagram account in 2015"
 				src="./images/kardashian/2015.png"
 			/>
@@ -380,6 +381,7 @@ Maybe you don't care about what Kim Kardashian was wearing in 2017. But so much 
 	>
 		<div>
 			<enhanced:img
+				class="grid-item"
 				alt="Kim Kardashian's Instagram account in 2016"
 				src="./images/kardashian/2016.png"
 			/>
@@ -394,6 +396,7 @@ Maybe you don't care about what Kim Kardashian was wearing in 2017. But so much 
 	>
 		<div>
 			<enhanced:img
+				class="grid-item"
 				alt="Kim Kardashian's Instagram account in 2018"
 				src="./images/kardashian/2018.png"
 			/>
@@ -408,6 +411,7 @@ Maybe you don't care about what Kim Kardashian was wearing in 2017. But so much 
 	>
 		<div>
 			<enhanced:img
+				class="grid-item"
 				alt="Kim Kardashian's Instagram account in 2019"
 				src="./images/kardashian/2019.png"
 			/>
@@ -422,6 +426,7 @@ Maybe you don't care about what Kim Kardashian was wearing in 2017. But so much 
 	>
 		<div>
 			<enhanced:img
+				class="grid-item"
 				alt="Kim Kardashian's Instagram account in 2022"
 				src="./images/kardashian/2022.png"
 			/>
@@ -453,7 +458,13 @@ Maybe you don't care about what Kim Kardashian was wearing in 2017. But so much 
 		flex: 1;
 	}
 
-	img {
+	div :global(picture) {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+	}
+
+	.grid-item {
 		position: absolute;
 		width: 100%;
 		height: 100%;
@@ -1223,19 +1234,27 @@ Back in the 80s people were calling the wisdom of this idea into question. This 
 
 ```svelte
 <enhanced:img
+	class="critique"
 	alt="Abstract of 'A Critique of the Remote Procedure Call Paradigm'"
 	src="./images/rpc-1.png"
-	style="width: 50rem; transform: translate(-14em, -2em) rotate(-2deg)"
+	style="width: 50rem; transform: translate(10em, -2em) rotate(-2deg)"
 />
 
 <enhanced:img
+	class="critique"
 	alt="Abstract of 'A Critique of the Remote Procedure Call Paradigm'"
 	src="./images/rpc-2.png"
-	style="width: 50rem; transform: translate(14em, 4em) rotate(2deg)"
+	style="width: 50rem; transform: translate(40em, 4em) rotate(2deg)"
 />
 
 <style>
-	img {
+	:global(picture):has(.critique) {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+	}
+
+	.critique {
 		position: absolute;
 		filter: drop-shadow(1em 1em 2em black);
 	}
@@ -1370,6 +1389,7 @@ This is a recent example that gained some traction from the Deno blog and it's o
 	a {
 		width: 100%;
 		height: 100%;
+		text-align: center;
 	}
 </style>
 ```

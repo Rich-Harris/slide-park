@@ -1,11 +1,13 @@
 // @ts-ignore
-import { slides } from './.slides/index.js';
-import Slide from './Slide.svelte';
+import Slide from 'slide-park:Slide.svelte';
 
 const WORDS_PER_MINUTE = 180;
 const WORDS_PER_SECOND = WORDS_PER_MINUTE / 60;
 
-export async function getSlide(slug: string) {
+// @ts-ignore
+const slides = SLIDES;
+
+export async function getSlide(slug) {
 	const match = /^(\d+)-(\d+)$/.exec(slug);
 	if (!match) return { status: 404 };
 

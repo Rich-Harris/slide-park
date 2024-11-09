@@ -7,7 +7,7 @@ const WORDS_PER_SECOND = WORDS_PER_MINUTE / 60;
 // @ts-ignore
 const slides = SLIDES;
 
-export async function getSlide(slug: string) {
+export async function getSlide(slug) {
 	const match = /^(\d+)-(\d+)$/.exec(slug);
 	if (!match) return { status: 404 };
 

@@ -6,6 +6,8 @@ import { marked } from 'marked';
 const asset_dir = url.fileURLToPath(new URL('assets', import.meta.url));
 const assets = fs.readdirSync(asset_dir);
 
+const template = fs.readFileSync(`${asset_dir}/load.js`, 'utf-8'); // TODO rename
+
 /**
  * @typedef
  * {{
@@ -198,11 +200,92 @@ export function slides({ input, output = 'src/routes' }) {
 
 	let is_build = false;
 
+	const lookup = new Map();
+
+	let svelte_plugin;
+
 	return {
 		name: 'slides',
 
 		configResolved(config) {
 			is_build = config.command === 'build';
+
+			svelte_plugin = config.plugins.find(
+				(plugin) => plugin.name === 'vite-plugin-svelte'
+			);
+			if (!svelte_plugin) {
+				throw new Error(`Could not find vite-plugin-svelte`);
+			}
+		},
+
+		resolveId(importee, importer) {
+			if (importee === 'slide-park:Slide.svelte') {
+				// TODO do we need to faff around with virtual paths? we can just expose it from the package i think
+				return `${asset_dir}/Slide.svelte`;
+			}
+		},
+
+		load(id) {
+			const [file, params] = id.split('?');
+
+			if (params) {
+				const q = new URLSearchParams(params);
+
+				if (q.has('slide-park')) {
+					const { slides } = load(file, is_build);
+
+					const i = q.get('slide');
+
+					if (i !== null) {
+						const slide = slides[i];
+
+						return {
+							code: slide.component
+						};
+					}
+
+					lookup.set(file, slides);
+
+					const dir = path.dirname(file);
+
+					const index = template.replace(
+						'SLIDES',
+						`[${slides
+							.map(
+								(slide, i) =>
+									`{ steps: ${slide.steps}, words: ${slide.words}, load: () => import('${file}?slide-park&slide=${i}') }`
+							)
+							.join(',\n')}]`
+					);
+
+					return {
+						code: index,
+						map: ''
+					};
+				}
+			}
+		},
+
+		async transform(code, id, opts) {
+			const [file, params] = id.split('?');
+
+			if (params) {
+				const q = new URLSearchParams(params);
+
+				if (q.has('slide-park')) {
+					const i = q.get('slide');
+
+					if (i !== null) {
+						const transformed = await svelte_plugin.transform(
+							code,
+							`${file}.${i}.svelte`,
+							opts
+						);
+
+						return transformed;
+					}
+				}
+			}
 		},
 
 		buildStart() {
