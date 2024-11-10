@@ -25,7 +25,11 @@ declare module '@rich_harris/slide-park' {
 		step: number;
 	}
 
-	const SlidePark: Component<{ data: SlideData; children?: Snippet }>;
+	const SlidePark: Component<{
+		data: SlideData;
+		defaultMode?: 'presenter' | 'viewer';
+		children?: Snippet;
+	}>;
 
 	export default SlidePark;
 
@@ -33,10 +37,11 @@ declare module '@rich_harris/slide-park' {
 }
 
 declare module '@rich_harris/slide-park/vite' {
-	export function slides(): import("vite").PluginOption;
+	export function slides(): import('vite').PluginOption;
 
 	export {};
-}declare module '*?slide-park' {
+}
+declare module '*?slide-park' {
 	function getSlide(
 		slug: string
 	): Promise<import('@rich_harris/slide-park').SlideData>;

@@ -1,5 +1,7 @@
 <script lang="ts">
+	import { Canvas } from '@threlte/core';
 	import SlidePark from '@rich_harris/slide-park';
+	import StarField from './stars/StarField.svelte';
 	import './styles.css';
 
 	let { data } = $props();
@@ -9,6 +11,29 @@
 	<title>North Star • {data.current.title}</title>
 </svelte:head>
 
-<SlidePark {data}>
-	<data.current.component step={data.step} />
+<SlidePark {data} defaultMode="viewer">
+	<div class="background">
+		<Canvas>
+			<StarField />
+		</Canvas>
+	</div>
+
+	<!-- <div class="slide">
+		<data.current.component step={data.step} />
+	</div> -->
 </SlidePark>
+
+<style>
+	.background,
+	.slide {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+	}
+
+	.background {
+		background: radial-gradient(at center, black, hsl(220 100 3));
+	}
+</style>

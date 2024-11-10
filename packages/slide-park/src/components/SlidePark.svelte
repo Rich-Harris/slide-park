@@ -7,12 +7,13 @@
 
 	interface Props {
 		data: SlideData;
+		defaultMode?: 'presenter' | 'viewer';
 		children?: Snippet;
 	}
 
-	let { data, children }: Props = $props();
+	let { data, defaultMode = 'presenter', children }: Props = $props();
 
-	let mode: 'presenter' | 'viewer' = $state('presenter');
+	let mode = $state(defaultMode);
 	let primary = $state(true);
 
 	const current = 'slide-park:current';
@@ -98,6 +99,7 @@
 		width: 100vw;
 
 		.slide {
+			position: relative;
 			aspect-ratio: 16 / 9;
 			background-size: cover;
 			width: 100em;
