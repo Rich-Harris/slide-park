@@ -8,25 +8,9 @@ export async function load_milkyway() {
 	const response = await fetch(mw_url);
 	const { features } = (await response.json()) as GeoJSON.FeatureCollection<GeoJSON.MultiPolygon>;
 
-	console.log(features);
-
 	const layers: THREE.BufferGeometry[] = [];
 
 	const tmp: number[] = [];
-
-	// const geometry = new THREE.BufferGeometry();
-
-	// geometry.setAttribute(
-	// 	'position',
-	// 	new THREE.Float32BufferAttribute([0, 1, 0, 0, 1, 1, -1, 1, 1], 3)
-	// );
-	// geometry.setAttribute(
-	// 	'normal',
-	// 	new THREE.Float32BufferAttribute([0, -1, 0, 0, -1, 0, 0, -1, 0], 3)
-	// );
-	// geometry.setIndex([0, 1, 2]);
-
-	// layers.push(geometry);
 
 	for (const feature of features.slice(1)) {
 		if (feature.geometry.coordinates.length !== 1) {
@@ -41,7 +25,6 @@ export async function load_milkyway() {
 
 			const data = flatten([ring]);
 			const triangles = earcut(data.vertices, data.holes, data.dimensions);
-			console.log(ring.length, data.vertices.length, triangles);
 
 			for (const coords of ring) {
 				project(coords[0], coords[1], 1.1, tmp);

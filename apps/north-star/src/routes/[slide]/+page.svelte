@@ -18,9 +18,11 @@
 		</Canvas>
 	</div>
 
-	<div class="slide">
-		<data.current.component step={data.step} />
-	</div>
+	{#key data.current.index}
+		<div class="slide">
+			<data.current.component step={data.step} />
+		</div>
+	{/key}
 </SlidePark>
 
 <style>
