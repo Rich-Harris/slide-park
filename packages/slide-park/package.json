@@ -1,6 +1,6 @@
 {
     "name": "@rich_harris/slide-park",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "author": "Rich Harris",
     "type": "module",
     "exports": {
@@ -17,8 +17,8 @@
         "prepublishOnly": "node scripts/generate-dts.js"
     },
     "files": [
-        "index.js",
-        "assets"
+        "src",
+        "types"
     ],
     "license": "MIT",
     "dependencies": {
