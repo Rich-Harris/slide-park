@@ -63,7 +63,7 @@
 			{#if children}
 				{@render children()}
 			{:else}
-				<data.current.component step={data.step} />
+				<data.current.component state={data.current.step.state} />
 			{/if}
 		</div>
 	</div>

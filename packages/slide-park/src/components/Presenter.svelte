@@ -13,7 +13,18 @@
 </script>
 
 <div class="text">
-	<div class="content">{@html data.current.text}</div>
+	<div class="content">
+		{#each data.current.steps as step}
+			<section aria-current={step === data.current.step}>
+				{#if Object.keys(step.state).length > 0}
+					<pre><code>{JSON.stringify(step.state)}</code></pre>
+				{/if}
+
+				{@html step.words}
+			</section>
+		{/each}
+	</div>
+
 	<p class="progress">
 		<span style="width: 4em;">{data.current.index + 1}/{data.total}</span>
 		<progress value={(data.current.index + 1) / data.total} max="1"></progress>
@@ -51,6 +62,18 @@
 			height: 0;
 			flex: 1;
 			overflow: auto;
+
+			section[aria-current='false'] {
+				color: #888;
+			}
+
+			section:not(:last-child) {
+				border-bottom: 4px solid #666;
+			}
+		}
+
+		pre code {
+			font-size: 0.8em;
 		}
 
 		.progress {

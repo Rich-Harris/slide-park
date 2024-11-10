@@ -1,14 +1,21 @@
 import { Slide } from '@rich_harris/slide-park';
 import { Component } from 'svelte';
 
+export interface SlideStub {
+	num_steps: number;
+	num_words: number;
+	component: string;
+}
+
 export interface SlideLoader {
-	steps: number;
-	words: number;
+	num_steps: number;
+	num_words: number;
 	load: () => Promise<{
-		metadata: {
-			title: string;
-			text: string;
-		};
+		title: string;
+		steps: Array<{
+			words: string;
+			state: Record<string, any>;
+		}>;
 		default: Component<{ slide: Slide }>;
 	}>;
 }

@@ -1,3 +1,4 @@
+/** @import { SlideStub } from './types.js' */
 import * as fs from 'node:fs';
 import * as url from 'node:url';
 import { marked } from 'marked';
@@ -7,16 +8,16 @@ const asset_dir = url.fileURLToPath(new URL('.', import.meta.url));
 const template = fs.readFileSync(`${asset_dir}/template.js`, 'utf-8');
 
 const pattern =
-	/(.+)\n*((?:> [^\n]+\n?)+)?(?:\n([\s\S]+?))?(?:\n+```svelte\n*([\s\S]+)\n*```)?[\s\n]+$/;
+	/(.+)\n+(?:([^`][\s\S]+?))?(?:\n+```svelte\n*([\s\S]+)\n*```)?[\s\n]*$/;
 
 /**
  * @param {string} file
- * @returns {Array<{ steps: number; words: number; component: string; }>}
+ * @returns {SlideStub[]}
  */
 function load(file) {
 	const markdown = fs.readFileSync(file, 'utf-8');
 
-	/** @type {Array<{ steps: number; words: number; component: string; }>} */
+	/** @type {SlideStub[]} */
 	const slides = [];
 
 	for (let content of markdown.split(/^#+ /m).slice(1)) {
@@ -26,51 +27,42 @@ function load(file) {
 			throw new Error(`Invalid slide: \n---\n${content}\n---`);
 		}
 
-		let [_, title, config, text = '', component = ''] = match;
+		let [_, title, text = '', component = ''] = match;
 
-		let steps = 1;
+		if (text === '' && component === '') continue;
 
-		if (config) {
-			for (const line of config.trim().split('\n')) {
-				const [key, value] = line
-					.slice(2)
-					.split(':')
-					.map((str) => str.trim());
+		const steps = text.split(/\n+---\n+/).map((content) => {
+			const [_, config, markdown] = /^((?:> .+\n)*\n+)?([^]+)/m.exec(
+				content.trim()
+			);
 
-				if (key === 'steps') {
-					steps = Number(value);
-				} else {
-					throw new Error(`Unknown config key: ${key}`);
+			const state = {};
+
+			if (config) {
+				for (const line of config.trim().split('\n')) {
+					const match = /^> ([^=]+)(?:\s*=\s*(.+))?$/.exec(line);
+					state[match[1]] = match[2] ? JSON.parse(match[2]) : true;
 				}
 			}
-		}
 
-		if (text.startsWith('```svelte')) {
-			component = text.slice('```svelte\n'.length, -'```\n'.length).trim();
-			text = '';
-		}
+			return {
+				state,
+				words: marked(markdown)
+			};
+		});
 
 		if (!component) {
 			const message = `Missing component for slide ${slides.length + 1} ("${title}")`;
 
 			console.error(`\u001B[1m\u001B[31m${message}\u001B[39m\u001B[22m`);
 			component = `<h1 style="color: hotpink">${title}</h1>`;
-
-			if (text === '') {
-				continue;
-			}
 		}
 
-		const metadata = JSON.stringify({
-			text: marked(text),
-			title
-		});
-
-		component = `<script context="module">export const metadata = ${metadata};</script>\n\n${component}`;
+		component = `<script context="module">export const title = ${JSON.stringify(title)}; export const steps = ${JSON.stringify(steps)};</script>\n\n${component}`;
 
 		slides.push({
-			steps,
-			words: text.split(/\s+/).length,
+			num_steps: steps.length,
+			num_words: steps.reduce((t, s) => t + s.words.split(/\s+/).length, 0),
 			component
 		});
 	}
@@ -82,6 +74,7 @@ function load(file) {
  * @returns {import('vite').PluginOption}
  */
 export function slides() {
+	/** @type {Map<string, SlideStub[]>} */
 	let lookup = new Map();
 	let svelte_plugin;
 
@@ -129,7 +122,7 @@ export function slides() {
 						`[${slides
 							.map(
 								(slide, i) =>
-									`{ steps: ${slide.steps}, words: ${slide.words}, load: () => import('${file}?slide-park&slide=${i}') }`
+									`{ num_steps: ${slide.num_steps}, num_words: ${slide.num_words}, load: () => import('${file}?slide-park&slide=${i}') }`
 							)
 							.join(',\n')}]`
 					);
