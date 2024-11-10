@@ -1,3 +1,7 @@
+/**
+ * Convert b-v index to rgb. From https://jsfiddle.net/AkjDw/1/,
+ * via https://stackoverflow.com/questions/21977786/star-b-v-color-index-to-apparent-rgb-color
+ */
 export function bv_to_rgb(bv: number) {
 	var t = 4600 * (1 / (0.92 * bv + 1.7) + 1 / (0.92 * bv + 0.62));
 
