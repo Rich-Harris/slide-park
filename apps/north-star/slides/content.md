@@ -6,6 +6,10 @@ Shift-P to toggle presenter mode
 
 Open in a separate window to have presenter/viewer modes simultaneously
 
+```svelte
+<h1>North Star</h1>
+```
+
 # Intro
 
 I was a real space nerd as a child. TK description of space nerdery, esoteric space knowledge, used to love coming to planetariums (planetaria?) like this one, time spent outdoors looking up at the sky learning the constellations; noticing that things that seem fixed are actually moving (and if you pay close observation you can predict their movements); learning how to find the North Star.

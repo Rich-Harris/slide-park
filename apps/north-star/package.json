@@ -17,6 +17,8 @@
 		"@sveltejs/enhanced-img": "^0.4.1",
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^4.0.0",
+		"@types/delaunator": "^5.0.3",
+		"@types/earcut": "^2.1.4",
 		"@types/geojson": "^7946.0.14",
 		"prettier": "^3.3.2",
 		"prettier-plugin-svelte": "^3.2.6",
@@ -26,9 +28,14 @@
 		"vite": "^5.0.3"
 	},
 	"dependencies": {
+		"@fontsource/dm-serif-display": "^5.1.0",
+		"@fontsource/eb-garamond": "^5.1.1",
+		"@fontsource/fira-mono": "^5.1.0",
+		"@fontsource/fira-sans": "^5.1.0",
 		"@threlte/core": "next",
 		"@threlte/extras": "next",
 		"@types/three": "^0.169.0",
+		"earcut": "^3.0.0",
 		"three": "^0.170.0"
 	}
 }

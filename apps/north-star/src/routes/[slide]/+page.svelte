@@ -18,9 +18,9 @@
 		</Canvas>
 	</div>
 
-	<!-- <div class="slide">
+	<div class="slide">
 		<data.current.component step={data.step} />
-	</div> -->
+	</div>
 </SlidePark>
 
 <style>
