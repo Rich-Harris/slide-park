@@ -1,11 +1,16 @@
 declare module '@rich_harris/slide-park' {
 	import type { Component, Snippet } from 'svelte';
+	export interface SlideStep {
+		words: string;
+		state: Record<string, any>;
+	}
+
 	export interface Slide {
 		index: number;
-		steps: number;
-		text: string;
-		title: string;
 		component: Component;
+		title: string;
+		steps: SlideStep[];
+		step: SlideStep;
 	}
 
 	export interface SlideData {
@@ -22,10 +27,13 @@ declare module '@rich_harris/slide-park' {
 			step: string | null;
 		};
 		current: Slide;
-		step: number;
 	}
 
-	const SlidePark: Component<{ data: SlideData; children?: Snippet }>;
+	const SlidePark: Component<{
+		data: SlideData;
+		defaultMode?: 'viewer' | 'presenter';
+		children?: Snippet;
+	}>;
 
 	export default SlidePark;
 

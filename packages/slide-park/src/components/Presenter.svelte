@@ -3,9 +3,26 @@
 
 	interface Props {
 		data: SlideData;
+		wpm: number;
 	}
 
-	let { data }: Props = $props();
+	let { data, wpm }: Props = $props();
+
+	const words_per_second = $derived(wpm / 60);
+
+	const remaining_words = $derived.by(() => {
+		const index = data.current.steps.indexOf(data.current.step);
+
+		const words_read = data.current.steps
+			.slice(0, index)
+			.reduce((t, s) => t + s.words.split(/\s/).length, 0);
+
+		return data.remaining - words_read;
+	});
+
+	const remaining_seconds = $derived(
+		Math.round(remaining_words / words_per_second)
+	);
 
 	function pad(n: number) {
 		return n < 10 ? '0' + n : n;
@@ -29,7 +46,8 @@
 		<span style="width: 4em;">{data.current.index + 1}/{data.total}</span>
 		<progress value={(data.current.index + 1) / data.total} max="1"></progress>
 		<span style="width: 9em; text-align: right;">
-			{Math.floor(data.remaining / 60)}m{pad(data.remaining % 60)}s remaining
+			{Math.floor(remaining_seconds / 60)}m{pad(remaining_seconds % 60)}s
+			remaining
 		</span>
 	</p>
 </div>

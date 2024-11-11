@@ -8,10 +8,11 @@
 	interface Props {
 		data: SlideData;
 		defaultMode?: 'presenter' | 'viewer';
+		wpm?: number;
 		children?: Snippet;
 	}
 
-	let { data, defaultMode = 'presenter', children }: Props = $props();
+	let { data, defaultMode = 'presenter', wpm = 180, children }: Props = $props();
 
 	let mode = $state(defaultMode);
 	let primary = $state(true);
@@ -57,7 +58,7 @@
 />
 
 <div class="slide-park" class:presenter-mode={mode === 'presenter'}>
-	<Presenter {data} />
+	<Presenter {data} {wpm} />
 	<div class="main">
 		<div class="slide">
 			{#if children}

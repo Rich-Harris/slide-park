@@ -30,6 +30,10 @@ export interface SlideData {
 	current: Slide;
 }
 
-declare const SlidePark: Component<{ data: SlideData; children?: Snippet }>;
+declare const SlidePark: Component<{
+	data: SlideData;
+	defaultMode?: 'viewer' | 'presenter';
+	children?: Snippet;
+}>;
 
 export default SlidePark;

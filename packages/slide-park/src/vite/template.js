@@ -3,9 +3,6 @@
 
 import { error } from '@sveltejs/kit';
 
-const WORDS_PER_MINUTE = 180;
-const WORDS_PER_SECOND = WORDS_PER_MINUTE / 60;
-
 // @ts-ignore
 const slides = /** @type {SlideLoader[]} */ (SLIDES);
 
@@ -42,17 +39,13 @@ export async function getSlide(slug) {
 	const next_step =
 		step_num < loader.num_steps ? `${slide_num}-${step_num + 1}` : next_slide;
 
-	const remaining_words = slides
-		.slice(slide_num)
-		.map((slide) => slide.num_words)
-		.reduce((a, b) => a + b, 0);
-
-	const remaining = Math.round(remaining_words / WORDS_PER_SECOND);
-
 	/** @type {SlideData} */
 	const data = {
 		total: slides.length,
-		remaining,
+		remaining: slides
+			.slice(slide_index)
+			.map((slide) => slide.num_words)
+			.reduce((a, b) => a + b, 0),
 		prev: {
 			slide: prev_slide,
 			step: prev_step
