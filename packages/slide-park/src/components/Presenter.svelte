@@ -8,6 +8,8 @@
 
 	let { data, wpm }: Props = $props();
 
+	let content: HTMLElement;
+
 	const words_per_second = $derived(wpm / 60);
 
 	const remaining_words = $derived.by(() => {
@@ -27,12 +29,23 @@
 	function pad(n: number) {
 		return n < 10 ? '0' + n : n;
 	}
+
+	function scroll(node: HTMLElement, fn: () => boolean) {
+		$effect(() => {
+			if (fn()) {
+				node.scrollIntoView();
+			}
+		});
+	}
 </script>
 
 <div class="text">
-	<div class="content">
+	<div class="content" bind:this={content}>
 		{#each data.current.steps as step}
-			<section aria-current={step === data.current.step}>
+			<section
+				use:scroll={() => step === data.current.step}
+				aria-current={step === data.current.step}
+			>
 				{#if Object.keys(step.state).length > 0}
 					<pre><code>{JSON.stringify(step.state)}</code></pre>
 				{/if}
