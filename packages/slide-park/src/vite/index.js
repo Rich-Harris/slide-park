@@ -41,7 +41,7 @@ function load(file) {
 			if (config) {
 				for (const line of config.trim().split('\n')) {
 					const match = /^> ([^=]+)(?:\s*=\s*(.+))?$/.exec(line);
-					state[match[1]] = match[2] ? JSON.parse(match[2]) : true;
+					state[match[1].trim()] = match[2] ? JSON.parse(match[2]) : true;
 				}
 			}
 
