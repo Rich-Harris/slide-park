@@ -16,6 +16,7 @@
 
 	let mode = $state(defaultMode);
 	let primary = $state(true);
+	let element: HTMLElement;
 
 	const current = 'slide-park:current';
 
@@ -46,6 +47,15 @@
 				mode = mode === 'presenter' ? 'viewer' : 'presenter';
 			}
 		}
+
+		if (e.code === 'KeyF' && e.metaKey) {
+			e.preventDefault();
+			element.requestFullscreen();
+		}
+
+		if (e.code === 'Escape') {
+			document.exitFullscreen();
+		}
 	}}
 	onstorage={(e) => {
 		if (e.key !== current) return;
@@ -60,7 +70,7 @@
 <div class="slide-park" class:presenter-mode={mode === 'presenter'}>
 	<Presenter {data} {wpm} />
 	<div class="main">
-		<div class="slide">
+		<div bind:this={element} class="slide">
 			{#if children}
 				{@render children()}
 			{:else}
