@@ -82,7 +82,7 @@
 			'Open Sans',
 			'Helvetica Neue',
 			sans-serif;
-		font-size: 80px;
+		font-size: calc(20px / var(--scale));
 		background: #000;
 		color: white;
 		padding: 1em;
@@ -92,7 +92,8 @@
 		.content {
 			height: 0;
 			flex: 1;
-			overflow: auto;
+			overflow-x: hidden;
+			overflow-y: auto;
 
 			section[aria-current='false'] {
 				color: #888;

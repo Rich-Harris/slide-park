@@ -72,20 +72,23 @@
 
 <style>
 	.slide-park {
+		--ratio: 2.5;
+		--scale: calc(1 / (1 + var(--ratio)));
 		position: fixed;
 		right: 0;
 		top: 0;
-		width: 400%;
+		width: calc(100% * (1 + var(--ratio)));
 		height: 100%;
 		display: grid;
-		grid-template-columns: 3fr 1fr;
+		grid-template-columns: calc(var(--ratio) / (var(--ratio) + 1) * 100%) calc(100% / (1 + var(--ratio)));
 		align-items: center;
 		justify-content: center;
 		transform-origin: 100% 50%;
 		transition: transform 0.2s;
+		background: var(--background, transparent);
 
 		&.presenter-mode {
-			transform: scale(0.25);
+			transform: scale(var(--scale));
 		}
 	}
 
