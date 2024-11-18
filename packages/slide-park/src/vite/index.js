@@ -31,6 +31,8 @@ function load(file) {
 
 		if (text === '' && component === '') continue;
 
+		const imported = new Set();
+
 		const steps = text.split(/\n+---\n+/).map((content) => {
 			const [_, config, markdown] = /^((?:> .+\n)*\n+)?([^]+)/m.exec(
 				content.trim()
@@ -40,8 +42,22 @@ function load(file) {
 
 			if (config) {
 				for (const line of config.trim().split('\n')) {
-					const match = /^> ([^=]+)(?:\s*=\s*(.+))?$/.exec(line);
-					state[match[1].trim()] = match[2] ? JSON.parse(match[2]) : true;
+					const [_, key, value] = /^> ([^=\s]+)(?:\s*=\s*(.+))?$/.exec(line);
+
+					let parsed;
+
+					if (value) {
+						if (value.startsWith('./')) {
+							parsed = value;
+							imported.add(value);
+						} else {
+							parsed = JSON.parse(value);
+						}
+					} else {
+						parsed = true;
+					}
+
+					state[key] = parsed;
 				}
 			}
 
@@ -58,7 +74,17 @@ function load(file) {
 			component = `<h1 style="color: hotpink">${title}</h1>`;
 		}
 
-		component = `<script context="module">export const title = ${JSON.stringify(title)}; export const steps = ${JSON.stringify(steps)};</script>\n\n${component}`;
+		let steps_declaration = JSON.stringify(steps);
+
+		let imports = [...imported]
+			.map((source, i) => {
+				const name = `__import_${i}`;
+				steps_declaration = steps_declaration.replaceAll(`"${source}"`, name);
+				return `import * as ${name} from '${source}';`;
+			})
+			.join('');
+
+		component = `<script context="module">${imports}export const title = ${JSON.stringify(title)}; export const steps = ${steps_declaration};</script>\n\n${component}`;
 
 		slides.push({
 			num_steps: steps.length,
