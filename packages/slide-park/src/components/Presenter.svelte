@@ -33,7 +33,9 @@
 	function scroll(node: HTMLElement, fn: () => boolean) {
 		$effect(() => {
 			if (fn()) {
-				node.scrollIntoView();
+				node.scrollIntoView({
+					behavior: 'smooth'
+				});
 			}
 		});
 	}
