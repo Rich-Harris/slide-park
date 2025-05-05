@@ -3,22 +3,66 @@
 
 	interface Props {
 		data: SlideData;
+		wpm: number;
 	}
 
-	let { data }: Props = $props();
+	let { data, wpm }: Props = $props();
+
+	let content: HTMLElement;
+
+	const words_per_second = $derived(wpm / 60);
+
+	const remaining_words = $derived.by(() => {
+		const index = data.current.steps.indexOf(data.current.step);
+
+		const words_read = data.current.steps
+			.slice(0, index)
+			.reduce((t, s) => t + s.words.split(/\s/).length, 0);
+
+		return data.remaining - words_read;
+	});
+
+	const remaining_seconds = $derived(
+		Math.round(remaining_words / words_per_second)
+	);
 
 	function pad(n: number) {
 		return n < 10 ? '0' + n : n;
 	}
+
+	function scroll(node: HTMLElement, fn: () => boolean) {
+		$effect(() => {
+			if (fn()) {
+				node.scrollIntoView({
+					behavior: 'smooth'
+				});
+			}
+		});
+	}
 </script>
 
 <div class="text">
-	<div class="content">{@html data.current.text}</div>
+	<div class="content" bind:this={content}>
+		{#each data.current.steps as step}
+			<section
+				use:scroll={() => step === data.current.step}
+				aria-current={step === data.current.step}
+			>
+				{#if Object.keys(step.state).length > 0}
+					<pre><code>{JSON.stringify(step.state)}</code></pre>
+				{/if}
+
+				{@html step.words}
+			</section>
+		{/each}
+	</div>
+
 	<p class="progress">
 		<span style="width: 4em;">{data.current.index + 1}/{data.total}</span>
 		<progress value={(data.current.index + 1) / data.total} max="1"></progress>
 		<span style="width: 9em; text-align: right;">
-			{Math.floor(data.remaining / 60)}m{pad(data.remaining % 60)}s remaining
+			{Math.floor(remaining_seconds / 60)}m{pad(remaining_seconds % 60)}s
+			remaining
 		</span>
 	</p>
 </div>
@@ -40,7 +84,7 @@
 			'Open Sans',
 			'Helvetica Neue',
 			sans-serif;
-		font-size: 80px;
+		font-size: calc(20px / var(--scale));
 		background: #000;
 		color: white;
 		padding: 1em;
@@ -50,7 +94,20 @@
 		.content {
 			height: 0;
 			flex: 1;
-			overflow: auto;
+			overflow-x: hidden;
+			overflow-y: auto;
+
+			section[aria-current='false'] {
+				color: #888;
+			}
+
+			section:not(:last-child) {
+				border-bottom: 4px solid #666;
+			}
+		}
+
+		pre code {
+			font-size: 0.8em;
 		}
 
 		.progress {

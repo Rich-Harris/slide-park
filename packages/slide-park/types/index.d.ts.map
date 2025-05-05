@@ -2,6 +2,7 @@
 	"version": 3,
 	"file": "index.d.ts",
 	"names": [
+		"SlideStep",
 		"Slide",
 		"SlideData",
 		"slides"
@@ -14,6 +15,6 @@
 		null,
 		null
 	],
-	"mappings": ";;kBAGiBA,KAAKA;;;;;;;;kBAQLC,SAASA;;;;;;;;;;;;;;;;;;;;;;;;;iBCwEVC,MAAMA",
+	"mappings": ";;kBAGiBA,SAASA;;;;;kBAKTC,KAAKA;;;;;;;;kBAQLC,SAASA;;;;;;;;;;;;;;;;;;;;;;;;;;;;iBC2DVC,MAAMA",
 	"ignoreList": []
 }

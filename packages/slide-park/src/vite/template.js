@@ -3,9 +3,6 @@
 
 import { error } from '@sveltejs/kit';
 
-const WORDS_PER_MINUTE = 180;
-const WORDS_PER_SECOND = WORDS_PER_MINUTE / 60;
-
 // @ts-ignore
 const slides = /** @type {SlideLoader[]} */ (SLIDES);
 
@@ -18,35 +15,37 @@ export async function getSlide(slug) {
 	const match = /^(\d+)-(\d+)$/.exec(slug);
 	if (!match) error(404);
 
-	const index = +match[1] - 1;
-	const step = +match[2];
+	const slide_num = +match[1];
+	const step_num = +match[2];
 
-	const loader = slides[index];
+	const slide_index = slide_num - 1;
+	const step_index = step_num - 1;
+
+	const loader = slides[slide_index];
 	if (!loader) error(404);
-
-	const prev = slides[index - 1] ?? null;
-	const next = slides[index + 1] ?? null;
-
-	const prev_slide = prev && `${index}-${prev.steps - 1}`;
-	const next_slide = next && `${index + 2}-0`;
-
-	const prev_step = step > 0 ? `${match[1]}-${step - 1}` : prev_slide;
-	const next_step =
-		step < loader.steps - 1 ? `${match[1]}-${step + 1}` : next_slide;
 
 	const module = await loader.load();
 
-	const remaining_words = slides
-		.slice(index)
-		.map((slide) => slide.words)
-		.reduce((a, b) => a + b, 0);
+	const step = module.steps[step_index];
+	if (!step) error(404);
 
-	const remaining = Math.round(remaining_words / WORDS_PER_SECOND);
+	const prev = slides[slide_index - 1] ?? null;
+	const next = slides[slide_index + 1] ?? null;
+
+	const prev_slide = prev && `${slide_num - 1}-${prev.num_steps}`;
+	const next_slide = next && `${slide_num + 1}-1`;
+
+	const prev_step = step_num > 1 ? `${slide_num}-${step_num - 1}` : prev_slide;
+	const next_step =
+		step_num < loader.num_steps ? `${slide_num}-${step_num + 1}` : next_slide;
 
 	/** @type {SlideData} */
 	const data = {
 		total: slides.length,
-		remaining,
+		remaining: slides
+			.slice(slide_index)
+			.map((slide) => slide.num_words)
+			.reduce((a, b) => a + b, 0),
 		prev: {
 			slide: prev_slide,
 			step: prev_step
@@ -56,13 +55,12 @@ export async function getSlide(slug) {
 			step: next_step
 		},
 		current: {
-			index,
-			text: module.metadata.text,
-			title: module.metadata.title,
-			steps: loader.steps,
-			component: module.default
-		},
-		step: +match[2]
+			index: slide_index,
+			component: module.default,
+			title: module.title,
+			steps: module.steps,
+			step: module.steps[step_index]
+		}
 	};
 
 	return data;

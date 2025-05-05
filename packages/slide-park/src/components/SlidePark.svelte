@@ -8,13 +8,20 @@
 	interface Props {
 		data: SlideData;
 		defaultMode?: 'presenter' | 'viewer';
+		wpm?: number;
 		children?: Snippet;
 	}
 
-	let { data, defaultMode = 'presenter', children }: Props = $props();
+	let {
+		data,
+		defaultMode = 'presenter',
+		wpm = 180,
+		children
+	}: Props = $props();
 
 	let mode = $state(defaultMode);
 	let primary = $state(true);
+	let element: HTMLElement;
 
 	const current = 'slide-park:current';
 
@@ -27,7 +34,7 @@
 
 <svelte:window
 	onkeydown={(e) => {
-		if (document.activeElement !== document.body) return;
+		if (document.activeElement !== document.body || !e.isTrusted) return;
 		if (e.key.startsWith('Arrow') || e.key === 'Space' || e.key === 'P') {
 			e.preventDefault();
 
@@ -45,6 +52,15 @@
 				mode = mode === 'presenter' ? 'viewer' : 'presenter';
 			}
 		}
+
+		if (e.code === 'KeyF' && e.metaKey) {
+			e.preventDefault();
+			element.requestFullscreen();
+		}
+
+		if (e.code === 'Escape') {
+			document.exitFullscreen();
+		}
 	}}
 	onstorage={(e) => {
 		if (e.key !== current) return;
@@ -57,13 +73,13 @@
 />
 
 <div class="slide-park" class:presenter-mode={mode === 'presenter'}>
-	<Presenter {data} />
+	<Presenter {data} {wpm} />
 	<div class="main">
-		<div class="slide">
+		<div bind:this={element} class="slide">
 			{#if children}
 				{@render children()}
 			{:else}
-				<data.current.component step={data.step} />
+				<data.current.component state={data.current.step.state} />
 			{/if}
 		</div>
 	</div>
@@ -71,20 +87,25 @@
 
 <style>
 	.slide-park {
+		--ratio: 2.5;
+		--scale: calc(1 / (1 + var(--ratio)));
 		position: fixed;
 		right: 0;
 		top: 0;
-		width: 400%;
+		width: calc(100% * (1 + var(--ratio)));
 		height: 100%;
 		display: grid;
-		grid-template-columns: 3fr 1fr;
+		grid-template-columns: calc(var(--ratio) / (var(--ratio) + 1) * 100%) calc(
+				100% / (1 + var(--ratio))
+			);
 		align-items: center;
 		justify-content: center;
 		transform-origin: 100% 50%;
 		transition: transform 0.2s;
+		background: var(--background, transparent);
 
 		&.presenter-mode {
-			transform: scale(0.25);
+			transform: scale(var(--scale));
 		}
 	}
 
