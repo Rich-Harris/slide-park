@@ -29,7 +29,7 @@
 
 <svelte:window
 	onkeydown={(e) => {
-		if (document.activeElement !== document.body) return;
+		if (document.activeElement !== document.body || !e.isTrusted) return;
 		if (e.key.startsWith('Arrow') || e.key === 'Space' || e.key === 'P') {
 			e.preventDefault();
 
