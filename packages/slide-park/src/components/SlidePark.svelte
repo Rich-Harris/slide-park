@@ -12,7 +12,12 @@
 		children?: Snippet;
 	}
 
-	let { data, defaultMode = 'presenter', wpm = 180, children }: Props = $props();
+	let {
+		data,
+		defaultMode = 'presenter',
+		wpm = 180,
+		children
+	}: Props = $props();
 
 	let mode = $state(defaultMode);
 	let primary = $state(true);
@@ -90,7 +95,9 @@
 		width: calc(100% * (1 + var(--ratio)));
 		height: 100%;
 		display: grid;
-		grid-template-columns: calc(var(--ratio) / (var(--ratio) + 1) * 100%) calc(100% / (1 + var(--ratio)));
+		grid-template-columns: calc(var(--ratio) / (var(--ratio) + 1) * 100%) calc(
+				100% / (1 + var(--ratio))
+			);
 		align-items: center;
 		justify-content: center;
 		transform-origin: 100% 50%;
