@@ -84,7 +84,7 @@ function load(file) {
 			})
 			.join('');
 
-		component = `<script context="module">${imports}export const title = ${JSON.stringify(title)}; export const steps = ${steps_declaration};</script>\n\n${component}`;
+		component = `<script module>${imports}export const title = ${JSON.stringify(title)}; export const steps = ${steps_declaration};</script>\n\n${component}`;
 
 		slides.push({
 			num_steps: steps.length,
