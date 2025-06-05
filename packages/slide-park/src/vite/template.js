@@ -6,6 +6,20 @@ import { error } from '@sveltejs/kit';
 // @ts-ignore
 const slides = /** @type {SlideLoader[]} */ (SLIDES);
 
+export function getIndex() {
+	/** @type {string[]} */
+	const index = [];
+
+	for (let slide_num = 0; slide_num < slides.length; slide_num += 1) {
+		const slide = slides[slide_num];
+		for (let step_num = 0; step_num < slide.num_steps; step_num += 1) {
+			index.push(`${slide_num + 1}-${step_num + 1}`);
+		}
+	}
+
+	return index;
+}
+
 /**
  *
  * @param {string} slug

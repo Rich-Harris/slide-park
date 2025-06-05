@@ -3,5 +3,7 @@ declare module '*?slide-park' {
 		slug: string
 	): Promise<import('@rich_harris/slide-park').SlideData>;
 
-	export { getSlide };
+	function getIndex(): string[];
+
+	export { getSlide, getIndex };
 }
