@@ -1,5 +1,6 @@
 import type { Component, Snippet } from 'svelte';
 import './ambient.d.ts';
+import { SlideLoader } from './vite/types.js';
 
 export interface SlideStep {
 	words: string;
@@ -26,6 +27,7 @@ export interface SlideData {
 	next: {
 		slide: string | null;
 		step: string | null;
+		load: SlideLoader['load_next'];
 	};
 	current: Slide;
 }

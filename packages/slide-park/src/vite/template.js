@@ -66,7 +66,8 @@ export async function getSlide(slug) {
 		},
 		next: {
 			slide: next_slide,
-			step: next_step
+			step: next_step,
+			load: loader.load_next
 		},
 		current: {
 			index: slide_index,
