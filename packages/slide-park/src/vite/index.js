@@ -20,6 +20,9 @@ function load(file) {
 	/** @type {SlideStub[]} */
 	const slides = [];
 
+	/** @type {SlideStub | null} */
+	let prev = null;
+
 	for (let content of markdown.split(/^#+ /m).slice(1)) {
 		const match = pattern.exec(content);
 
@@ -67,11 +70,23 @@ function load(file) {
 			};
 		});
 
-		if (!component) {
+		if (component) {
+			// extract all <enhanced:img> (TODO and <img> etc) and make them preloadable
+			const images = [];
+
+			for (const match of component.matchAll(
+				/<enhanced:img([\s\S]+?)(\/>|<\/enhanced:img>)/g
+			)) {
+				const src = /src=(?:(['"])(?!\1)+\1|[^\s]+)/.exec(match[1]);
+				images.push(`<enhanced:img ${src}></enhanced:img>`);
+			}
+
+			component += `{#snippet __images()}<div hidden>${images.join('')}</div>{/snippet} {@render __images()}`;
+		} else {
 			const message = `Missing component for slide ${slides.length + 1} ("${title}")`;
 
 			console.error(`\u001B[1m\u001B[31m${message}\u001B[39m\u001B[22m`);
-			component = `<h1 style="color: hotpink">${title}</h1>`;
+			component = `<h1 style="color: hotpink">${title}</h1> {#snippet __images()}{/snippet}`;
 		}
 
 		let steps_declaration = JSON.stringify(steps);
@@ -84,13 +99,17 @@ function load(file) {
 			})
 			.join('');
 
-		component = `<script context="module">${imports}export const title = ${JSON.stringify(title)}; export const steps = ${steps_declaration};</script>\n\n${component}`;
+		component = `<script module>${imports}export const title = ${JSON.stringify(title)}; export const steps = ${steps_declaration}; export { __images }</script>\n\n${component}`;
 
-		slides.push({
+		const slide = {
 			num_steps: steps.length,
 			num_words: steps.reduce((t, s) => t + s.words.split(/\s+/).length, 0),
 			component
-		});
+		};
+
+		slides.push(slide);
+
+		prev = slide;
 	}
 
 	return slides;
@@ -143,15 +162,16 @@ export function slides() {
 
 					lookup.set(file, slides);
 
-					const index = template.replace(
-						'SLIDES',
-						`[${slides
-							.map(
-								(slide, i) =>
-									`{ num_steps: ${slide.num_steps}, num_words: ${slide.num_words}, load: () => import('${file}?slide-park&slide=${i}') }`
-							)
-							.join(',\n')}]`
-					);
+					const loaders = slides.map((slide, i) => {
+						const load = `() => import('${file}?slide-park&slide=${i}')`;
+						const load_next = slides[i + 1]
+							? `() => import('${file}?slide-park&slide=${i + 1}')`
+							: 'undefined';
+
+						return `{ num_steps: ${slide.num_steps}, num_words: ${slide.num_words}, load: ${load}, load_next: ${load_next} }`;
+					});
+
+					const index = template.replace('SLIDES', `[${loaders.join(',\n')}]`);
 
 					return {
 						code: index,

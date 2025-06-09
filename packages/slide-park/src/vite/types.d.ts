@@ -1,5 +1,5 @@
 import { Slide } from '@rich_harris/slide-park';
-import { Component } from 'svelte';
+import { Component, Snippet } from 'svelte';
 
 export interface SlideStub {
 	num_steps: number;
@@ -16,6 +16,16 @@ export interface SlideLoader {
 			words: string;
 			state: Record<string, any>;
 		}>;
+		__images: Snippet;
+		default: Component<{ slide: Slide }>;
+	}>;
+	load_next: () => Promise<{
+		title: string;
+		steps: Array<{
+			words: string;
+			state: Record<string, any>;
+		}>;
+		__images: Snippet;
 		default: Component<{ slide: Slide }>;
 	}>;
 }
