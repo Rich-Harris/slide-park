@@ -126,13 +126,15 @@ export function slides() {
 	return {
 		name: 'slide-park',
 
-		configResolved(config) {
-			svelte_plugin = config.plugins.find(
-				(plugin) => plugin.name === 'vite-plugin-svelte'
-			);
+		async configResolved(config) {
+			svelte_plugin =
+				config.plugins.find((p) => p.name === 'vite-plugin-svelte:compile') ??
+				config.plugins.find((p) => p.name === 'vite-plugin-svelte');
 
 			if (!svelte_plugin) {
-				throw new Error(`Could not find vite-plugin-svelte`);
+				throw new Error(
+					`Could not find vite-plugin-svelte:compile or vite-plugin-svelte`
+				);
 			}
 		},
 
@@ -191,7 +193,11 @@ export function slides() {
 					const i = q.get('slide');
 
 					if (i !== null) {
-						const transformed = await svelte_plugin.transform(
+						const transform =
+							svelte_plugin.transform.handler ?? svelte_plugin.transform;
+
+						const transformed = await transform.call(
+							this,
 							code,
 							`${file}.${i}.svelte`,
 							opts
