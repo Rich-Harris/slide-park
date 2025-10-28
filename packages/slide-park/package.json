@@ -6,7 +6,8 @@
     "exports": {
         ".": {
             "types": "./types/index.d.ts",
-            "svelte": "./src/components/SlidePark.svelte"
+            "svelte": "./src/components/SlidePark.svelte",
+            "default": "./src/components/SlidePark.svelte"
         },
         "./vite": {
             "types": "./types/index.d.ts",
