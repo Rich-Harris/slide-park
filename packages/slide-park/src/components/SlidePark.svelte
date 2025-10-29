@@ -64,7 +64,6 @@
 		if (e.key !== current) return;
 
 		if (e.newValue !== $page.url.pathname) {
-			primary = false;
 			goto(e.newValue);
 		}
 	}}
