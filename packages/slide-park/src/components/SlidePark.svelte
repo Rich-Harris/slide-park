@@ -20,16 +20,16 @@
 	}: Props = $props();
 
 	let mode = $state(defaultMode);
-	let primary = $state(true);
 	let element: HTMLElement;
 
 	const current = 'slide-park:current';
 
-	afterNavigate((navigation) => {
-		if (primary && navigation.to) {
-			localStorage.setItem(current, navigation.to.url.pathname);
-		}
-	});
+	function go(pathname: string) {
+		if (!pathname) return;
+
+		goto(pathname);
+		localStorage.setItem(current, pathname);
+	}
 </script>
 
 <svelte:window
@@ -38,16 +38,14 @@
 		if (e.key.startsWith('Arrow') || e.key === 'Space' || e.key === 'P') {
 			e.preventDefault();
 
-			primary = true;
-
 			if (e.key === 'ArrowRight' || e.key === 'Space') {
-				data.next.step && goto(data.next.step);
+				go(data.next.step);
 			} else if (e.key === 'ArrowLeft') {
-				data.prev.step && goto(data.prev.step);
+				go(data.prev.step);
 			} else if (e.key === 'ArrowDown') {
-				data.next.slide && goto(data.next.slide);
+				go(data.next.slide);
 			} else if (e.key === 'ArrowUp') {
-				data.prev.slide && goto(data.prev.slide);
+				go(data.prev.slide);
 			} else if (e.key === 'P') {
 				mode = mode === 'presenter' ? 'viewer' : 'presenter';
 			}
