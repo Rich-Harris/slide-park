@@ -14,7 +14,9 @@
 
 	let {
 		data,
-		defaultMode = 'presenter',
+		defaultMode = (typeof sessionStorage !== 'undefined' &&
+			(sessionStorage.getItem('slide-park:mode') as 'presenter' | 'viewer')) ||
+			'viewer',
 		wpm = 180,
 		children
 	}: Props = $props();
@@ -48,6 +50,7 @@
 				go(data.prev.slide);
 			} else if (e.key === 'P') {
 				mode = mode === 'presenter' ? 'viewer' : 'presenter';
+				sessionStorage.setItem('slide-park:mode', mode);
 			}
 		}
 
