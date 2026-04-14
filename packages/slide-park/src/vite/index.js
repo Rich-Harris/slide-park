@@ -173,7 +173,10 @@ export function slides() {
 
 			resolveId: {
 				filter: {
-					id: /virtual:slide-park/
+					id: {
+						include: /virtual:slide-park/,
+						exclude: /\?svelte&type=style/
+					}
 				},
 
 				handler(id) {

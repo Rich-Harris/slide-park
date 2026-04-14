@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { goto, afterNavigate } from '$app/navigation';
+	import { goto } from '$app/navigation';
 	import type { SlideData } from '../index.d.ts';
 	import Presenter from './Presenter.svelte';
 	import type { Snippet } from 'svelte';
@@ -21,7 +21,7 @@
 		children
 	}: Props = $props();
 
-	let mode = $state(defaultMode);
+	let mode = $derived(defaultMode);
 	let element: HTMLElement;
 
 	const current = 'slide-park:current';
