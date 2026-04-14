@@ -9,5 +9,6 @@
 	"scripts": {
 		"changeset:version": "changeset version",
 		"changeset:publish": "changeset publish"
-	}
+	},
+	"packageManager": "pnpm@10.33.0"
 }
