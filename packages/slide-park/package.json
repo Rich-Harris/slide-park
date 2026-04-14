@@ -39,5 +39,8 @@
     "repository": {
         "type": "git",
         "url": "https://github.com/Rich-Harris/slide-park"
+    },
+    "publishConfig": {
+        "access": "public"
     }
 }
