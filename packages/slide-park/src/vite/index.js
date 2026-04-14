@@ -161,10 +161,25 @@ export function slides() {
 				}
 			},
 
-			configureServer(vite) {
-				vite.watcher.on('change', async (file) => {
-					if (lookup.has(file)) {
-						lookup.set(file, await load(file));
+			configureServer(server) {
+				server.watcher.on('change', async (file) => {
+					if (!lookup.has(file)) return;
+
+					const old_slides = /** @type {SlideStub[]} */ (lookup.get(file));
+					const slides = await load(file);
+
+					lookup.set(file, slides);
+
+					const length = Math.max(slides.length, old_slides.length);
+
+					for (let i = 0; i < length; i += 1) {
+						if (JSON.stringify(old_slides[i]) === JSON.stringify(slides[i])) {
+							continue;
+						}
+
+						const id = `virtual:slide-park${file}/${i}.svelte`;
+						const mod = server.moduleGraph.getModuleById(id);
+						if (mod) server.reloadModule(mod);
 					}
 				});
 			}

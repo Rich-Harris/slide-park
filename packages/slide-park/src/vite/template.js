@@ -4,7 +4,7 @@
 import { error } from '@sveltejs/kit';
 
 // @ts-ignore
-const slides = /** @type {SlideLoader[]} */ (SLIDES);
+let slides = /** @type {SlideLoader[]} */ (SLIDES);
 
 export function getIndex() {
 	/** @type {string[]} */
@@ -79,4 +79,12 @@ export async function getSlide(slug) {
 	};
 
 	return data;
+}
+
+if (import.meta.hot) {
+	import.meta.hot.accept((module) => {
+		if (module?.slides) {
+			slides = module.slides;
+		}
+	});
 }
