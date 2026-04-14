@@ -1,5 +1,11 @@
 # @rich_harris/slide-park
 
+## 0.2.3
+
+### Patch Changes
+
+- 222ca39: fix: make HMR work
+
 ## 0.2.2
 
 ### Patch Changes
