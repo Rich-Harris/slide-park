@@ -2,5 +2,12 @@
 	"name": "slide-park-monorepo",
 	"version": "0.0.1",
 	"private": true,
-	"type": "module"
+	"type": "module",
+	"devDependencies": {
+		"@changesets/cli": "^2.30.0"
+	},
+	"scripts": {
+		"changeset:version": "changeset version",
+		"changeset:publish": "changeset publish"
+	}
 }
