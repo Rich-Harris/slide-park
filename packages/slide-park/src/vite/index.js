@@ -128,6 +128,7 @@ export function slides() {
 	let lookup = new Map();
 
 	return [
+		// transform `content.md?slide-park` to a module that exposes `getIndex` and `getSlide` functions
 		{
 			name: 'slide-park',
 
@@ -168,6 +169,9 @@ export function slides() {
 				});
 			}
 		},
+
+		// load `virtual:slide-park/path/to/content.md/1.svelte` as a Svelte component
+		// containing the contents of the relevant part of `content.md`
 		{
 			name: 'slide-park:slide',
 
@@ -175,7 +179,7 @@ export function slides() {
 				filter: {
 					id: {
 						include: /virtual:slide-park/,
-						exclude: /\?svelte&type=style/
+						exclude: /[?&]svelte&type=style&lang.css$/
 					}
 				},
 
@@ -186,7 +190,10 @@ export function slides() {
 
 			load: {
 				filter: {
-					id: /virtual:slide-park/
+					id: {
+						include: /virtual:slide-park/,
+						exclude: /[?&]svelte&type=style&lang.css$/
+					}
 				},
 
 				handler(id) {
@@ -205,6 +212,9 @@ export function slides() {
 				}
 			}
 		},
+
+		// resolve any imports inside `virtual:slide-path/path/to/content.md/1.svelte`
+		// relative to the original `content.md` file
 		{
 			name: 'slide-park:asset',
 
