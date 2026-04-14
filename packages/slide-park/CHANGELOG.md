@@ -1,5 +1,11 @@
 # @rich_harris/slide-park
 
+## 0.2.2
+
+### Patch Changes
+
+- 0683391: fix: ignore style requests
+
 ## 0.2.1
 
 ### Patch Changes
