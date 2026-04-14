@@ -35,5 +35,9 @@
     "peerDependencies": {
         "@sveltejs/kit": "^2.5.27",
         "svelte": "^5.1.12"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Rich-Harris/slide-park"
     }
 }
