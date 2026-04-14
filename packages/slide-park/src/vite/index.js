@@ -177,9 +177,13 @@ export function slides() {
 							continue;
 						}
 
-						const id = `virtual:slide-park${file}/${i}.svelte`;
-						const mod = server.moduleGraph.getModuleById(id);
-						if (mod) server.reloadModule(mod);
+						for (const id of [
+							`virtual:slide-park${file}/${i}.svelte`,
+							`virtual:slide-park${file}/${i}.svelte?svelte&type=style&lang.css`
+						]) {
+							const mod = server.moduleGraph.getModuleById(id);
+							if (mod) server.reloadModule(mod);
+						}
 					}
 				});
 			}
