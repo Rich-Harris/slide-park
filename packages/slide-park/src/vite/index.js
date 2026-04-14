@@ -1,4 +1,4 @@
-/** @import { SlideStub } from './types.js' */
+/** @import { SlideStub, Step } from './types.js' */
 import * as fs from 'node:fs';
 import * as url from 'node:url';
 import { marked } from 'marked';
@@ -12,16 +12,13 @@ const pattern =
 
 /**
  * @param {string} file
- * @returns {SlideStub[]}
+ * @returns {Promise<SlideStub[]>}
  */
-function load(file) {
+async function load(file) {
 	const markdown = fs.readFileSync(file, 'utf-8');
 
 	/** @type {SlideStub[]} */
 	const slides = [];
-
-	/** @type {SlideStub | null} */
-	let prev = null;
 
 	for (let content of markdown.split(/^#+ /m).slice(1)) {
 		const match = pattern.exec(content);
@@ -36,16 +33,26 @@ function load(file) {
 
 		const imported = new Set();
 
-		const steps = text.split(/\n+---\n+/).map((content) => {
-			const [_, config, markdown] = /^((?:> .+\n)*\n+)?([^]+)/m.exec(
-				content.trim()
-			);
+		/** @type {Step[]} */
+		const steps = [];
 
+		for (const content of text.split(/\n+---\n+/)) {
+			const match = /^((?:> .+\n)*\n+)?([^]+)/m.exec(content.trim());
+			if (!match) throw new Error('an impossible situation occurred');
+
+			const [_, config, markdown] = match;
+
+			/**
+			 * @type {Record<string, any}
+			 */
 			const state = {};
 
 			if (config) {
 				for (const line of config.trim().split('\n')) {
-					const [_, key, value] = /^> ([^=\s]+)(?:\s*=\s*(.+))?$/.exec(line);
+					const match = /^> ([^=\s]+)(?:\s*=\s*(.+))?$/.exec(line);
+					if (!match) throw new Error('an impossible situation occurred');
+
+					const [_, key, value] = match;
 
 					let parsed;
 
@@ -64,11 +71,11 @@ function load(file) {
 				}
 			}
 
-			return {
+			steps.push({
 				state,
-				words: marked(markdown)
-			};
-		});
+				words: await marked(markdown)
+			});
+		}
 
 		if (component) {
 			// extract all <enhanced:img> (TODO and <img> etc) and make them preloadable
@@ -108,66 +115,37 @@ function load(file) {
 		};
 
 		slides.push(slide);
-
-		prev = slide;
 	}
 
 	return slides;
 }
 
 /**
- * @returns {import('vite').PluginOption}
+ * @returns {import('vite').PluginOption[]}
  */
 export function slides() {
 	/** @type {Map<string, SlideStub[]>} */
 	let lookup = new Map();
-	let svelte_plugin;
 
-	return {
-		name: 'slide-park',
+	return [
+		{
+			name: 'slide-park',
 
-		async configResolved(config) {
-			svelte_plugin =
-				config.plugins.find((p) => p.name === 'vite-plugin-svelte:compile') ??
-				config.plugins.find((p) => p.name === 'vite-plugin-svelte');
+			load: {
+				filter: {
+					id: /\?slide-park/
+				},
 
-			if (!svelte_plugin) {
-				throw new Error(
-					`Could not find vite-plugin-svelte:compile or vite-plugin-svelte`
-				);
-			}
-		},
-
-		load(id) {
-			const [file, params] = id.split('?');
-
-			if (params) {
-				const q = new URLSearchParams(params);
-
-				if (q.has('slide-park')) {
-					let slides = lookup.get(file);
-					if (!slides) {
-						slides = load(file);
-						lookup.set(file, slides);
-					}
-
-					const i = q.get('slide');
-
-					if (i !== null) {
-						const slide = slides[i];
-
-						return {
-							code: slide.component,
-							map: null
-						};
-					}
+				async handler(id) {
+					const [file] = id.split('?');
+					const slides = await load(file);
 
 					lookup.set(file, slides);
 
 					const loaders = slides.map((slide, i) => {
-						const load = `() => import('${file}?slide-park&slide=${i}')`;
+						const load = `() => import('virtual:slide-park${file}/${i}.svelte')`;
 						const load_next = slides[i + 1]
-							? `() => import('${file}?slide-park&slide=${i + 1}')`
+							? `() => import('virtual:slide-park${file}/${i + 1}.svelte')`
 							: 'undefined';
 
 						return `{ num_steps: ${slide.num_steps}, num_words: ${slide.num_words}, load: ${load}, load_next: ${load_next} }`;
@@ -180,44 +158,68 @@ export function slides() {
 						map: null
 					};
 				}
-			}
-		},
+			},
 
-		async transform(code, id, opts) {
-			const [file, params] = id.split('?');
-
-			if (params) {
-				const q = new URLSearchParams(params);
-
-				if (q.has('slide-park')) {
-					const i = q.get('slide');
-
-					if (i !== null) {
-						const transform =
-							svelte_plugin.transform.handler ?? svelte_plugin.transform;
-
-						const transformed = await transform.call(
-							this,
-							code,
-							`${file}.${i}.svelte`,
-							opts
-						);
-
-						return {
-							...transformed,
-							map: null
-						};
+			configureServer(vite) {
+				vite.watcher.on('change', async (file) => {
+					if (lookup.has(file)) {
+						lookup.set(file, await load(file));
 					}
+				});
+			}
+		},
+		{
+			name: 'slide-park:slide',
+
+			resolveId: {
+				filter: {
+					id: /virtual:slide-park/
+				},
+
+				handler(id) {
+					return id;
+				}
+			},
+
+			load: {
+				filter: {
+					id: /virtual:slide-park/
+				},
+
+				handler(id) {
+					const parts = id.slice('virtual:slide-park'.length).split('/');
+					const [index] = /** @type {string} */ (parts.pop()).split('.');
+
+					const file = parts.join('/');
+
+					const slides = /** @type {SlideStub[]} */ (lookup.get(file));
+					const slide = slides[+index];
+
+					return {
+						code: slide.component,
+						map: null
+					};
 				}
 			}
 		},
+		{
+			name: 'slide-park:asset',
 
-		configureServer(vite) {
-			vite.watcher.on('change', (file) => {
-				if (lookup.has(file)) {
-					lookup.set(file, load(file));
+			resolveId: {
+				async handler(id, importer) {
+					if (!importer?.startsWith('virtual:slide-park')) {
+						return;
+					}
+
+					const file = importer
+						.slice('virtual:slide-park'.length)
+						.split('/')
+						.slice(0, -1)
+						.join('/');
+
+					return await this.resolve(id, file);
 				}
-			});
+			}
 		}
-	};
+	];
 }

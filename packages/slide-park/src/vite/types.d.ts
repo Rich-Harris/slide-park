@@ -1,6 +1,11 @@
 import { Slide } from '@rich_harris/slide-park';
 import { Component, Snippet } from 'svelte';
 
+export interface Step {
+	state: Record<string, any>;
+	words: string;
+}
+
 export interface SlideStub {
 	num_steps: number;
 	num_words: number;
