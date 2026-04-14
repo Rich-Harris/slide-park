@@ -1,5 +1,11 @@
 # @rich_harris/slide-park
 
+## 0.2.1
+
+### Patch Changes
+
+- 33950b4: force version bump
+
 ## 0.2.0
 
 ### Minor Changes
