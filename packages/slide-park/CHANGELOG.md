@@ -1,5 +1,12 @@
 # @rich_harris/slide-park
 
+## 0.2.4
+
+### Patch Changes
+
+- 0edf213: fix: dieplay progress in terms of time, not slides
+- d267278: fix: make HMR work for styles too
+
 ## 0.2.3
 
 ### Patch Changes
