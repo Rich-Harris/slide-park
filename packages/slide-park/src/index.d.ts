@@ -18,8 +18,14 @@ export interface Slide {
 export interface SlideData {
 	/** The number of slides */
 	total: number;
-	/** The estimated remaining time, in seconds */
-	remaining: number;
+	words: {
+		/** the number of words in the presentation */
+		total: number;
+		/** the number of words before this slide */
+		read: number;
+		/** the number of words remaining, including this slide */
+		unread: number;
+	};
 	prev: {
 		slide: string | null;
 		step: string | null;

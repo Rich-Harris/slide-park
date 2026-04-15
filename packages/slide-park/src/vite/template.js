@@ -53,13 +53,16 @@ export async function getSlide(slug) {
 	const next_step =
 		step_num < loader.num_steps ? `${slide_num}-${step_num + 1}` : next_slide;
 
+	const words = slides.map((slide) => slide.num_words);
+
 	/** @type {SlideData} */
 	const data = {
 		total: slides.length,
-		remaining: slides
-			.slice(slide_index)
-			.map((slide) => slide.num_words)
-			.reduce((a, b) => a + b, 0),
+		words: {
+			total: words.reduce(sum, 0),
+			read: words.slice(0, slide_index).reduce(sum, 0),
+			unread: words.slice(slide_index).reduce(sum, 0)
+		},
 		prev: {
 			slide: prev_slide,
 			step: prev_step
@@ -79,6 +82,14 @@ export async function getSlide(slug) {
 	};
 
 	return data;
+}
+
+/**
+ * @param {number} a
+ * @param {number} b
+ */
+function sum(a, b) {
+	return a + b;
 }
 
 if (import.meta.hot) {
