@@ -12,14 +12,17 @@
 
 	const words_per_second = $derived(wpm / 60);
 
+	const step_index = $derived(data.current.steps.indexOf(data.current.step));
+
+	/** the number of words read in this slide */
+	const words_read = $derived(
+		data.current.steps
+			.slice(0, step_index)
+			.reduce((t, s) => t + s.words.split(/\s/).length, 0)
+	);
+
 	const remaining_words = $derived.by(() => {
-		const index = data.current.steps.indexOf(data.current.step);
-
-		const words_read = data.current.steps
-			.slice(0, index)
-			.reduce((t, s) => t + s.words.split(/\s/).length, 0);
-
-		return data.remaining - words_read;
+		return data.words.unread - words_read;
 	});
 
 	const remaining_seconds = $derived(
@@ -59,7 +62,8 @@
 
 	<p class="progress">
 		<span style="width: 4em;">{data.current.index + 1}/{data.total}</span>
-		<progress value={(data.current.index + 1) / data.total} max="1"></progress>
+		<progress value={(data.words.read + words_read) / data.words.total} max="1"
+		></progress>
 		<span style="width: 9em; text-align: right;">
 			{Math.floor(remaining_seconds / 60)}m{pad(remaining_seconds % 60)}s
 			remaining
