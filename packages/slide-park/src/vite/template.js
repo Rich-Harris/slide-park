@@ -4,7 +4,7 @@
 import { error } from '@sveltejs/kit';
 
 // @ts-ignore
-let slides = /** @type {SlideLoader[]} */ (SLIDES);
+export let slides = /** @type {SlideLoader[]} */ (SLIDES);
 
 export function getIndex() {
 	/** @type {string[]} */
@@ -93,9 +93,24 @@ function sum(a, b) {
 }
 
 if (import.meta.hot) {
-	import.meta.hot.accept((module) => {
+	// importers (i.e. `+page.js`) keep a reference to the *first* instance's
+	// `getIndex` and `getSlide`, since this module accepts its own updates.
+	// So we swap the new loaders into that instance (which `hot.data` lets
+	// us reach from later instances), then re-run `load` so the page picks
+	// up the new content
+	/** @type {(slides: SlideLoader[]) => void} */
+	const update = (import.meta.hot.data.update ??= (/** @type {SlideLoader[]} */ s) => {
+		slides = s;
+	});
+
+	import.meta.hot.accept(async (module) => {
 		if (module?.slides) {
-			slides = module.slides;
+			update(module.slides);
+
+			if (!import.meta.env.SSR) {
+				const { invalidateAll } = await import('$app/navigation');
+				await invalidateAll();
+			}
 		}
 	});
 }

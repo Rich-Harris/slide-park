@@ -127,6 +127,9 @@ export function slides() {
 	/** @type {Map<string, SlideStub[]>} */
 	let lookup = new Map();
 
+	/** @type {Map<string, { timestamp: number, changed: Promise<number[]> }>} */
+	let updates = new Map();
+
 	return [
 		// transform `content.md?slide-park` to a module that exposes `getIndex` and `getSlide` functions
 		{
@@ -161,31 +164,68 @@ export function slides() {
 				}
 			},
 
-			configureServer(server) {
-				server.watcher.on('change', async (file) => {
-					if (!lookup.has(file)) return;
+			// `hotUpdate` runs once per environment (client, ssr...) for each change.
+			// The virtual slide modules aren't associated with `content.md` in the
+			// module graph, so we need to invalidate the ones that changed ourselves
+			async hotUpdate({ file, timestamp, modules }) {
+				if (!lookup.has(file)) return;
 
+				let update = updates.get(file);
+
+				if (update?.timestamp !== timestamp) {
 					const old_slides = /** @type {SlideStub[]} */ (lookup.get(file));
-					const slides = await load(file);
 
-					lookup.set(file, slides);
+					update = {
+						timestamp,
+						changed: load(file).then((slides) => {
+							lookup.set(file, slides);
 
-					const length = Math.max(slides.length, old_slides.length);
+							/** @type {number[]} */
+							const changed = [];
+							const length = Math.max(slides.length, old_slides.length);
 
-					for (let i = 0; i < length; i += 1) {
-						if (JSON.stringify(old_slides[i]) === JSON.stringify(slides[i])) {
-							continue;
-						}
+							for (let i = 0; i < length; i += 1) {
+								if (JSON.stringify(old_slides[i]) !== JSON.stringify(slides[i])) {
+									changed.push(i);
+								}
+							}
 
-						for (const id of [
-							`virtual:slide-park${file}/${i}.svelte`,
-							`virtual:slide-park${file}/${i}.svelte?svelte&type=style&lang.css`
-						]) {
-							const mod = server.moduleGraph.getModuleById(id);
-							if (mod) server.reloadModule(mod);
-						}
+							return changed;
+						})
+					};
+
+					updates.set(file, update);
+				}
+
+				let changed;
+
+				try {
+					changed = await update.changed;
+				} catch {
+					// invalid markdown — let the `content.md?slide-park` module
+					// reload and surface the error
+					return;
+				}
+
+				// Invalidate changed slides rather than returning them as HMR boundaries
+				// (which vite-plugin-svelte would filter out, since they haven't been
+				// re-transformed yet). The `content.md?slide-park` module self-accepts,
+				// and when it re-executes its dynamic imports will point at the
+				// invalidated slides with a fresh `?t=` query
+				const graph = this.environment.moduleGraph;
+				const invalidated = new Set();
+
+				for (const i of changed) {
+					for (const id of [
+						`virtual:slide-park${file}/${i}.svelte`,
+						`virtual:slide-park${file}/${i}.svelte?svelte&type=style&lang.css`
+					]) {
+						const mod = graph.getModuleById(id);
+						if (mod) graph.invalidateModule(mod, invalidated, timestamp, true);
 					}
-				});
+				}
+
+				return modules;
 			}
 		},
 
