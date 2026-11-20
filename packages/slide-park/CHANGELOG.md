@@ -1,5 +1,11 @@
 # @rich_harris/slide-park
 
+## 0.2.5
+
+### Patch Changes
+
+- ef8e19e: fix: get hot reloading working
+
 ## 0.2.4
 
 ### Patch Changes
